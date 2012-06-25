@@ -1,0 +1,143 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table
+END
+TextTableFormulaService.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableFormulaService.java
+END
+TextTableColumnCloneService.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableColumnCloneService.java
+END
+MaxMinElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/MaxMinElement.java
+END
+ITextTableFormulaElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/ITextTableFormulaElement.java
+END
+TextTablePropertyStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTablePropertyStore.java
+END
+TextTableCellReferencesService.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCellReferencesService.java
+END
+TextTableCellPropertyStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCellPropertyStore.java
+END
+TextTableCellReference.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCellReference.java
+END
+TextTableCellRangeName.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCellRangeName.java
+END
+TextTableFormula.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableFormula.java
+END
+TextTableFormulaModel.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableFormulaModel.java
+END
+CalculateFormula.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/CalculateFormula.java
+END
+IFormulaElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/IFormulaElement.java
+END
+TextTableFormulaExpression.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableFormulaExpression.java
+END
+Argument.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/Argument.java
+END
+TextTableCellCloneService.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCellCloneService.java
+END
+TextTableCloneService.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCloneService.java
+END
+CalculateString.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/CalculateString.java
+END
+MeanElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/MeanElement.java
+END
+Arguments.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/Arguments.java
+END
+BracketElement.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/BracketElement.java
+END
+TextTableCellRangeCloneService.java
+K 25
+svn:wc:ra_dav:version-url
+V 115
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableCellRangeCloneService.java
+END
+TextTableRowCloneService.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/text/table/TextTableRowCloneService.java
+END

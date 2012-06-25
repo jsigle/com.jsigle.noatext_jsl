@@ -1,0 +1,41 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form
+END
+Messages.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form/Messages.java
+END
+messages.properties
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form/messages.properties
+END
+FormComponent.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form/FormComponent.java
+END
+Form.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form/Form.java
+END
+messages_de.properties
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form/messages_de.properties
+END
+FormService.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/form/FormService.java
+END

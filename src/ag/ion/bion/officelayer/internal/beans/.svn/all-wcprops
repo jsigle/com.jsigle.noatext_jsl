@@ -1,0 +1,23 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/beans
+END
+AbstractPropertyStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/beans/AbstractPropertyStore.java
+END
+PropertyKey.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/beans/PropertyKey.java
+END
+AbstractProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/beans/AbstractProperties.java
+END

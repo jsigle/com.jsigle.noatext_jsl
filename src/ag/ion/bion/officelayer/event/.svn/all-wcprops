@@ -1,0 +1,89 @@
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event
+END
+IElementDisposedListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/IElementDisposedListener.java
+END
+ITerminateListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/ITerminateListener.java
+END
+ICloseEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/ICloseEvent.java
+END
+VetoTerminateListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/VetoTerminateListener.java
+END
+IDocumentListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/IDocumentListener.java
+END
+CloseAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/CloseAdapter.java
+END
+IDocumentEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/IDocumentEvent.java
+END
+IEventListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/IEventListener.java
+END
+EventAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/EventAdapter.java
+END
+DocumentAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/DocumentAdapter.java
+END
+ICloseListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/ICloseListener.java
+END
+ITerminateEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/ITerminateEvent.java
+END
+IDocumentModifyListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/IDocumentModifyListener.java
+END
+IEvent.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/event/IEvent.java
+END

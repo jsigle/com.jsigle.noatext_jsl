@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/search
+END
+ISearchDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/search/ISearchDescriptor.java
+END
+ResultMatchWalker.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/search/ResultMatchWalker.java
+END
+ISearchResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/search/ISearchResult.java
+END
+SearchDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/search/SearchDescriptor.java
+END

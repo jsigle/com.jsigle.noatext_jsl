@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/desktop
+END
+GlobalCommands.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/desktop/GlobalCommands.java
+END
+IFrame.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/desktop/IFrame.java
+END
+DesktopException.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/desktop/DesktopException.java
+END
+IDesktopService.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/desktop/IDesktopService.java
+END

@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/extended
+END
+IETextTableColumn.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/extended/IETextTableColumn.java
+END
+IETextTableCell.java
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/extended/IETextTableCell.java
+END
+IETextTableCellRange.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/extended/IETextTableCellRange.java
+END
+IETextTableRow.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/extended/IETextTableRow.java
+END
+IETextTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/extended/IETextTable.java
+END

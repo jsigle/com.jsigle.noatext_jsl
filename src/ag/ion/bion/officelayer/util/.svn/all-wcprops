@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util
+END
+ServiceInterfaceSupplier.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/ServiceInterfaceSupplier.java
+END
+VariableTextFieldHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/VariableTextFieldHelper.java
+END
+UtilException.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/UtilException.java
+END
+INumberFormatService.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/INumberFormatService.java
+END
+IJavaNumberFormat.java
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/IJavaNumberFormat.java
+END
+IJavaFormattedNumber.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/IJavaFormattedNumber.java
+END
+INumberFormat.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/INumberFormat.java
+END
+ArrayUtils.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/util/ArrayUtils.java
+END
+Assert.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/Assert.java
+END
+PropertyCollection.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/PropertyCollection.java
+END
+OrderedHashMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/util/OrderedHashMap.java
+END

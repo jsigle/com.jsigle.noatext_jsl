@@ -1,0 +1,59 @@
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table
+END
+ITextTableCellRangeName.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/ITextTableCellRangeName.java
+END
+IFormula.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/IFormula.java
+END
+TextTableCellNameHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/TextTableCellNameHelper.java
+END
+ITextTableRowPropertyStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/ITextTableRowPropertyStore.java
+END
+IFormulaService.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/IFormulaService.java
+END
+IArgument.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/IArgument.java
+END
+ITextTablePropertyStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/ITextTablePropertyStore.java
+END
+ITextTableCellReferencesService.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/ITextTableCellReferencesService.java
+END
+ITextTableCellPropertyStore.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/text/table/ITextTableCellPropertyStore.java
+END

@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application
+END
+ApplicationInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/ApplicationInfo.java
+END
+RemoteOfficeApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/RemoteOfficeApplication.java
+END
+ApplicationAssistant.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/ApplicationAssistant.java
+END
+Messages.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/Messages.java
+END
+messages.properties
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/messages.properties
+END
+LazyApplicationInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/LazyApplicationInfo.java
+END
+LocalOfficeApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/LocalOfficeApplication.java
+END
+ApplicationProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/ApplicationProperties.java
+END
+messages_de.properties
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/3/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/messages_de.properties
+END
+AbstractOfficeApplication.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/internal/application/AbstractOfficeApplication.java
+END

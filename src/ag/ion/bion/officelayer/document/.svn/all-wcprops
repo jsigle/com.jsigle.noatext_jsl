@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document
+END
+IPersistenceService.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/IPersistenceService.java
+END
+AbstractDocument.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/AbstractDocument.java
+END
+DocumentDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/DocumentDescriptor.java
+END
+IDocument.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/IDocument.java
+END
+DocumentException.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/DocumentException.java
+END
+IDocumentDescriptor.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/IDocumentDescriptor.java
+END
+IDocumentService.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/document/IDocumentService.java
+END

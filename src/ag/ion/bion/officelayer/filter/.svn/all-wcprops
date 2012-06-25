@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter
+END
+PSWFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/PSWFilter.java
+END
+PDFFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/PDFFilter.java
+END
+PDBFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/PDBFilter.java
+END
+TextEncFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/TextEncFilter.java
+END
+TextFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/TextFilter.java
+END
+HTMLFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/HTMLFilter.java
+END
+XMLDocBookFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/XMLDocBookFilter.java
+END
+IFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/IFilter.java
+END
+XMLMSWORD2003Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/XMLMSWORD2003Filter.java
+END
+PDFFilterProperties.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/PDFFilterProperties.java
+END
+RTFFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/RTFFilter.java
+END
+SDW30Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/SDW30Filter.java
+END
+SDW40Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/SDW40Filter.java
+END
+SDW50Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/SDW50Filter.java
+END
+MSOffice97Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/MSOffice97Filter.java
+END
+ODTFilter.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/ODTFilter.java
+END
+MSOffice95Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/MSOffice95Filter.java
+END
+MSOffice60Filter.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/bion/officelayer/filter/MSOffice60Filter.java
+END

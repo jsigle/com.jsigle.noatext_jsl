@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text
+END
+IDocumentIndex.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/IDocumentIndex.java
+END
+IAnnotationService.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/IAnnotationService.java
+END
+XInterfaceObjectSelection.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/XInterfaceObjectSelection.java
+END
+TextRangeSelection.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/TextRangeSelection.java
+END
+IAnnotation.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/IAnnotation.java
+END
+IDocumentIndexService.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/IDocumentIndexService.java
+END
+ITextRangeSelection.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/ITextRangeSelection.java
+END
+IXInterfaceObjectSelection.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/4/trunk/noa-libre/src/ag/ion/noa/text/IXInterfaceObjectSelection.java
+END
