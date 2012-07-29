@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OOWrapper updated with noa-libre and improved by Joerg Sigle
-Bundle-SymbolicName: ch.elexis.noatext_jsl;singleton:=true
-Bundle-Version: 1.4.3
-Bundle-Vendor: elexis.ch
+Bundle-SymbolicName: com.jsigle.noatext_jsl;singleton:=true
+Bundle-Version: 1.4.5
+Bundle-Vendor: jsigle.com
 Bundle-Localization: plugin
 Require-Bundle: ch.elexis,
  org.eclipse.core.runtime,
@@ -11,6 +11,8 @@ Require-Bundle: ch.elexis,
  org.eclipse.ui.forms,
  ch.rgw.utility
 Bundle-ClassPath: .,
+ lib/jurt.jar,
+ lib/officebean.jar,
  lib/java_uno_accessbridge.jar,
  lib/java_uno.jar,
  lib/juh.jar,
@@ -21,7 +23,7 @@ Bundle-ClassPath: .,
  lib/sandbox.jar,
  lib/unoil.jar,
  lib/bootstrapconnector.jar,
- lib/jurt.jar,
- lib/officebean.jar
+ bin/,
+ lib/
 Eclipse-LazyStart: true
 Bundle-Activator: ag.ion.bion.workbench.office.editor.core.EditorCorePlugin

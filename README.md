@@ -3,6 +3,10 @@ NOAText_jsl
 
 Ein TextPlugin für Elexis, aktualisiert auf Basis von noa-libre, mit verbesserter Stabilität.
 
+Version 1.4.5 benötigt die separate Datei ag.ion.noa_2.2.3.jar nicht mehr,
+diese war in 1.4.3 noch erforderlich. Ausserdem wurde der Name des Plugins geändert:
+von ch.elexis.noatext_jsl nach com.jsigle.noatext_jsl.
+
 Ausführliche Informationen auf: http://www.jsigle.com/prog/elexis#NOAText_jsl
 
 Status: BETA.

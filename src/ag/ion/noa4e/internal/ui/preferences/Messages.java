@@ -41,7 +41,7 @@ import org.eclipse.osgi.util.NLS;
 /**
  * Native language binding.
  * 
- * @author Andreas Bröker
+ * @author Andreas Brï¿½ker
  * @version $Revision: 9195 $
  */
 public class Messages extends NLS {

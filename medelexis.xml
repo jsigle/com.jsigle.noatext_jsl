@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<service:service category="feature" id="ch.elexis.noatext_jsl" name="NOAText_jsl" provider="joerg.sigle@jsigle.com" type="Dokumentenverwaltung" version="2.0.0" xmlns:service="http://www.medelexis.ch/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.medelexis.ch/services ../medelexis-commons/rsc/service.xsd ">
+<service:service category="feature" name="NOAText_jsl" provider="joerg.sigle@jsigle.com" type="Dokumentenverwaltung" version="2.0.0" xmlns:service="http://www.medelexis.ch/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.medelexis.ch/services ../medelexis-commons/rsc/service.xsd " id="com.jsigle.noatext_jsl">
   <service:conditions>
   	<service:roles>
   		<service:role priceClass="fixed-low"></service:role>

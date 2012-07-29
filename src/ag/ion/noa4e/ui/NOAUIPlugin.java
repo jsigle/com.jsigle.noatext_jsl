@@ -89,10 +89,12 @@ import ch.elexis.Hub;
 import ch.elexis.preferences.PreferenceConstants;
 import ch.elexis.preferences.SettingsPreferenceStore;
 
+import ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage;
+
 import ag.ion.bion.officelayer.application.ILazyApplicationInfo;
 import ag.ion.bion.officelayer.application.IOfficeApplication;
 import ag.ion.bion.officelayer.application.OfficeApplicationException;
-import ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage_jsl;
+import ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage;
 import ag.ion.noa4e.ui.operations.ActivateOfficeApplicationOperation;
 import ag.ion.noa4e.ui.operations.FindApplicationInfosOperation;
 import ag.ion.noa4e.ui.wizards.application.LocalApplicationWizard;
@@ -284,7 +286,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
             Messages.NOAUIPlugin_dialog_change_preferences_title,
             Messages.NOAUIPlugin_dialog_change_preferences_message)) {
           PreferenceDialog preferenceDialog = PreferencesUtil.createPreferenceDialogOn(shell,
-              LocalOfficeApplicationPreferencesPage_jsl.PAGE_ID,
+              LocalOfficeApplicationPreferencesPage.PAGE_ID,
               null,
               null);
           if (preferenceDialog.open() == Window.CANCEL)
@@ -304,7 +306,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
 
     	//JS modified this:
     	//The original code tries to access a preference store which is not used in Elexis,
-    	//according to GWs mods in LocalOfficeApplicationPreferencesPage.java
+    	//according to GWs mods in (back then:) LocalOfficeApplicationPreferencesPage.java
     	//Unsuitable original line, removed:
     	//String officeHome = getDefault().getPreferenceStore().getString(PREFERENCE_OFFICE_HOME);
     	//Newly inserted lines:
@@ -318,7 +320,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     		
         //JS modified this:
 	    //The original code tries to access a preference store which is not used in Elexis,
-	    //according to GWs mods in LocalOfficeApplicationPreferencesPage.java
+	    //according to GWs mods in (back then:) LocalOfficeApplicationPreferencesPage.java
 	    //Unsuitable original line, removed:
     	//boolean preventTermination = getDefault().getPreferenceStore().getBoolean(PREFERENCE_PREVENT_TERMINATION);
         //Newly inserted lines:
@@ -396,7 +398,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
 
     //JS modified this:
     //The original code tries to access a preference store which is not used in Elexis,
-    //according to GWs mods in LocalOfficeApplicationPreferencesPage.java
+    //according to GWs mods in (back then:) LocalOfficeApplicationPreferencesPage.java
     //Unsuitable original line, removed:
     //String officeHome = getDefault().getPreferenceStore().getString(PREFERENCE_OFFICE_HOME);
     //Newly inserted lines:
@@ -404,6 +406,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     String officeHome = preferenceStore.getString(PreferenceConstants.P_OOBASEDIR);
    
     System.out.println("NOAUIPlugin: internalStartApplication(): got officeHome.");
+
     if (officeHome==null)	System.out.println("NOAUIPlugin: internalStartApplication(): WARNING: officeHome==null");
     else					System.out.println("NOAUIPlugin: internalStartApplication(): officeHome="+officeHome);
     
@@ -474,7 +477,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
 
     	//JS modified this:
         //The original code tries to access a preference store which is not used in Elexis,
-        //according to GWs mods in LocalOfficeApplicationPreferencesPage.java
+        //according to GWs mods in (back then:) LocalOfficeApplicationPreferencesPage.java
         //Unsuitable original line, removed:
     	//getDefault().getPluginPreferences().setValue(PREFERENCE_OFFICE_HOME,
     	//                                             configuration.get(IOfficeApplication.APPLICATION_HOME_KEY).toString());
