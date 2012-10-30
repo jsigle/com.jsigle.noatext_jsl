@@ -457,12 +457,49 @@ public class NOAText implements ITextPlugin {
 	}
 	
 	public boolean findOrReplace(final String pattern, final ReplaceCallback cb){
-		System.out.println("NOAText: findOrReplace");
+//20121021js 1.4.6 added details to monitoring output		
+		System.out.println("NOAText: findOrReplace: pattern: "+pattern);
+		System.out.print  ("NOAText: findOrReplace: doc:     ");
+		if (doc == null)	{System.out.println("null");}
+		else 				{
+			System.out.print(doc.toString()+", ");
+			try {
+				System.out.print(doc.getLocationURL().toString());	//deprecated, but it works and I don't see a similar method. 20121021js
+			} catch (DocumentException ex) {
+				System.out.print("(LocationURL not available)");
+			}
+			System.out.println();
+		}
+		
 		SearchDescriptor search = new SearchDescriptor(pattern);
 		search.setUseRegularExpression(true);
 		if (doc == null) {
-			SWTHelper.showError("No doc in bill", "Fehler:",
-				"Es ist keine Rechnungsvorlage definiert");
+//20121021js 1.4.6
+//Diese Fehlermeldung ist vermutlich aus der Anfangszeit - der Fehler kann auch bei ganz anderen Dokumenten auftreten.
+//Entsprechend neuen Text für die Fehlermeldung formuliert		
+//			SWTHelper.showError("No doc in bill", "Fehler:",
+//				"Es ist keine Rechnungsvorlage definiert");
+// TODO transfer the error message to some external file of error messages!
+			System.out.println("NOAText: findOrReplace: FEHLER: findOrReplace doc is null."+pattern);
+			System.out.println("NOAText: findOrReplace: TODO: Bitte Fehlermeldung differenzieren und auf passende Stellen im Code verteilen,");
+			System.out.println("                        TODO: ggf. mit Dialogen oder eingebautem intelligentem handling.");
+			
+			SWTHelper.showError("findOrReplace doc is null", "Fehler",
+					 "NOAText: findOrReplace:\n\n"+
+					 "Das Dokument ist nicht vorhanden oder nicht erreichbar.\n"+
+					 "Enthaltene Platzhalter können nicht ersetzt werden.\n\n"+
+//					 "Mögliche Ursache: Das Öffnen des Dokuments hat zu lange gedauert.\n"+
+//					 "Wenn Sie LibreOffice benutzen und das Dokument viele Felder oder Makros enthält,\n"+  //<- in den Dialog zur Bestätigung des watchdog:destroy() als Hinweis schreiben!
+//					 "ist das keine Fehlfunktion. Andernfalls waren vielleicht abgedockte Toolbars etc.\n"+
+//					 "in LibreOffice/OpenOffice konfiguriert. Diese Einstellungen werden jetzt geändert.\n"+
+//					 "Bitte entschuldigen Sie die damit einhergehende Störung.\n\n"+
+					 "Sicherheitshalber sollten Sie das Office-Dokument ggf. als Backup\n"+ //<- lieber auch nach bestätigtem destroy() schreiben, wenn document null ist? Kann Elexis das selbst erledigen?
+					 "extern speichern, dann Elexis und LibreOffice/OpenOffice schliessen,\n"+
+					 "danach im Windows Task-Manager alle soffice.bin/soffice.exe schliessen,\n"+
+					 "welche definitiv zu keinem sichtbaren oder minimierten Fenster gehören.\n\n"+
+					 "Anschliessend können Sie Elexis erneut starten. Dadurch arbeiten Sie wieder\n"+
+					 "in einer definierten Umgebung, wenn Sie das Dokument erneut öffnen.\n");
+				
 			return false;
 		}
 		

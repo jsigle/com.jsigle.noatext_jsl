@@ -69,6 +69,9 @@ import ag.ion.bion.officelayer.document.IDocumentService; //20120222js: To suppo
 import ag.ion.bion.officelayer.text.ITextDocument;
 import ag.ion.noa.frame.ILayoutManager; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
 
+import ch.elexis.Desk;
+import ch.elexis.util.SWTHelper;
+
 import com.sun.star.frame.XLayoutManager; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
 import com.sun.star.frame.XFrame; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
 import com.sun.star.uno.UnoRuntime; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
@@ -78,7 +81,9 @@ import com.sun.star.frame.FrameSearchFlag; //20120222js: To support disabling me
 
 import org.eclipse.core.runtime.IProgressMonitor;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.widgets.Shell;
 
 import java.io.InputStream;
 
@@ -759,14 +764,44 @@ public class LoadDocumentOperation implements IRunnableWithProgress {
 				progressMonitor.beginTask(Messages.LoadDocumentOperation_monitor_loading_document, 50);
 		}
 
-		System.out.println("LoadDocumentOperation: run 2");
+		System.out.println("LoadDocumentOperation: run 2 - about to start internalThread...");
+		//201210220045js I'd like to ensure that the dialog asking the user whether they want to destroy the internal thread
+		//is actually displayed. That should be done by the SWTHelper module, but nothing happens while e.g. LibreOffice is busy
+		//opening the Status document template and supposedly checking macros or the like. Let me try by lowering the priority
+		//of that thread... Es reicht nicht, um während LibreOffice opening Status Vorlage einen Dialog erscheinen zu lassen.
+		//Erst, wenn das ziemlich / ganz durch ist, erscheint der Dialog. Andererseits... das ist ja ohnehin selbstlimitierend,
+		//und ich will *das* eigentlich garnicht unterbrechen. Aber wie ist es denn, wenn ich mal den Formatvorlagen-Dialog
+		//hervorhole und undocke? ... ALSO, witzigerweise ist es *genau* wie benötigt - und sogar noch mehr.
+		//Testcase: Dokument mit Tabelle erstellen, Tabellen-Toolbar undocken (vor jedem Test neu, weil noatext_jsl den
+		//wieder dockt, wenn es über das stalling hinausgekommen ist, Elexis so schliessen = offener ungedockter Toolbar
+		//wird für dieses Dokument gespeichert. Elexis schliessen, Elexis öffnen, dasselbe Dokument wieder laden (logs anschauen).
+		//(Es reicht auch: Dokument öffnen, Tabellen-Toolbar abdocken, Briefe-Fenster schliessen = wird gespeichert, Tabellen-
+		//Toolbar abgedockt schliessen, Dokument wieder laden (ohne die Selektion in Briefauswahl verändern zu müssen,
+		//Bei diesem Testverfahren braucht man auch Elexis nicht zu beenden.)
+		//Folge: Ein Stall (wie erwartet, auch mit LibreOffice 3.6.2.2).
+		//Aber: in dem Moment, wo der Watchdog die 40 erreicht, blitzelt es im OO
+		//Fenster (kann sein, die Menüs erscheinen), und mein Fehlerdialog erscheint. Und - wenn ich dort [Cancel] drücke
+		//(aktuell führt das dazu, dass das destroy NICHT gesendet wird), dann... verschwindet der Dialog, und...
+		//sofort erscheint das geladene Dokument. Die Toolbars werden automatisch gedockt.
+		//Das hat diesmal auch keine Nebenwirkungen (beim Status-Dokument wurden ja die Felder ersetzt), also das doc wird
+		//dadurch eben NICHT mit null zurückgeliefert, wie wenn ich das destroy abgeschickt hätte.
+		//Insofern ist: Dialog mit Hinweis auf die möglichen Gründe der Wartezeit zeigen, ohne weitere Auswahlmöglichkeit,
+		//und OHNE DANACH DESTROY ZU SENDEN für den weiteren Verlauf wohl das günstigste!!! 201210220116js
+		//(Ich weiss noch nicht, ob das auch die Priority auf lowest braucht - wahrscheinlich nicht - aber stören dürfte
+		//das wohl kaum, da entweder auf einem Standalone-System die DB-Performance dadurch frei bleibt, oder der Nutzer
+		//sonst wohl keine Nachteile haben sollte, bis zu Zeit für weitere Forschungen lasse ich das also mal so.)
+		System.out.println("LoadDocumentOperation: Reading priority of internal thread:");
+		System.out.println("LoadDocumentOperation: internalThread.getPriority()="+internalThread.getPriority());
+		System.out.println("LoadDocumentOperation: Changing priority of internal thread:");
+		internalThread.setPriority(Thread.MIN_PRIORITY);	//1 = THREAD_PRIORITY_LOWEST; 10=THREAD_PRIORITY_TIME_CRITICAL
+		System.out.println("LoadDocumentOperation: internalThread.getPriority()="+internalThread.getPriority());
 		internalThread.start();
-		System.out.println("LoadDocumentOperation: run 2.1");
+		System.out.println("LoadDocumentOperation: run 2.1 - internalThread has been started");
 		int cyclesWaitedForInternalThreadToComplete=0;
 		while (!internalThread.done()) {
-			System.out.println("LoadDocumentOperation: run 2.2 sleep(500) begins");
+			System.out.println("LoadDocumentOperation: run 2.2 - sleep(500) begins");
 			Thread.sleep(500);
-			System.out.println("LoadDocumentOperation: run 2.3 sleep(500) ends");
+			System.out.println("LoadDocumentOperation: run 2.3 - sleep(500) ends");
 			if (!isSubTask)
 				progressMonitor.worked(1);
 			System.out.println("LoadDocumentOperation: run 2.4");
@@ -775,15 +810,15 @@ public class LoadDocumentOperation implements IRunnableWithProgress {
 				 * This method is deprecated, but ...
 				 */
 				try {
-					System.out.println("LoadDocumentOperation: run 2.5");
+					System.out.println("LoadDocumentOperation: run 2.5 - progressMonitor.isCanceled() has been found.");
 					internalThread.stop();
 				} catch (Throwable throwable) {
 					// do not consume - ThreadDeath
-					System.out.println("LoadDocumentOperation: run 2.6");
+					System.out.println("LoadDocumentOperation: run 2.6 - internalThrread.stop() threw exception.");
 				}
-				System.out.println("LoadDocumentOperation: run 2.7");
+				System.out.println("LoadDocumentOperation: run 2.7 - progressMonitor.done() about to occur...");
 				progressMonitor.done();
-				System.out.println("LoadDocumentOperation: run 2.8 about to throw InterruptException()...");
+				System.out.println("LoadDocumentOperation: run 2.8 - about to throw InterruptException() with message...");
 				throw new InterruptedException(Messages.LoadDocumentOperation_exception_message_operation_interrupted);
 			}
 			//201202252105js:
@@ -822,21 +857,128 @@ public class LoadDocumentOperation implements IRunnableWithProgress {
 			//So only in very rare occasions, this very rude timout driven stall recovery needs to kick in,
 			//and its benefits extend beyond resolving the acute situation. For a workaround, I think that's rather nice.
 			//201202252154js
-			cyclesWaitedForInternalThreadToComplete=cyclesWaitedForInternalThreadToComplete+1;	//Each cycle currently sleeps for 500ms
-			if (cyclesWaitedForInternalThreadToComplete>40) {
-				cyclesWaitedForInternalThreadToComplete=0; //Paranoia: Damit der nächste Thread.destroy() ggf. nicht schon in 0.5 Sek zuschlagen kann...
-				System.out.println("LoadDocumentOperation: ERROR: internalThread timed out; will now be destroyed.");
-				System.out.println("WARNING: This functionality should NOT be used except for debugging - see intenalThread.destroy() help .");
-				System.out.println("WARNING: Destroying the internalThread is not guaranteed to return Elexis into a responsive state.");
-				System.out.println("WARNING: Neither can we guarantee that the document that was about to be opened will appear correctly.");
-				System.out.println("WARNING: That said, however, it DID succeed in some tests (4/5), and made the desired document");
-				System.out.println("WARNING: appear with LibreOffice in its desired frame, and even the problematic floating dialog windows");
-				System.out.println("WARNING: in addition to that - for either the table properties, or the externally opened F11 Formatvorlagen.");
-				System.out.println("WARNING: 201202252133js");
-				internalThread.destroy();	//this makes progressMonitor detect the end of the thread at least,
-											//but it is deprecated and very error prone. So this should NOT be used except for debugging.
-				//internalThread.stop();	//this does not stop progressMonitor from cycling on and on.
-				Thread.sleep(500);			//Nach dem destroy des anderen Threads lasse ich hier noch eine halbe Sekunde Zeit.
+			if (cyclesWaitedForInternalThreadToComplete>=0)	{
+				// 201210210818js: Counting up is held while the "do you want to destroyThread" dialog is visible.
+				cyclesWaitedForInternalThreadToComplete=cyclesWaitedForInternalThreadToComplete+1;	//Each cycle currently sleeps for 500ms
+				}
+			
+			System.out.println("LoadDocumentOperation: cyclesWaitedForInternalThreadToComplete: "+cyclesWaitedForInternalThreadToComplete);
+
+			int cyclesWatchdogMaximumAllowedHalfSecs = 40;
+			
+			if (cyclesWaitedForInternalThreadToComplete>cyclesWatchdogMaximumAllowedHalfSecs) {
+				cyclesWaitedForInternalThreadToComplete=-1; //Paranoia: Damit der nächste Thread.destroy() ggf. nicht schon in 0.5 Sek zuschlagen kann...
+				
+				//Version 1.4.5 hatte nach Ablauf des Watchdog automatisch ein internalThread.destroy() ausgelöst.
+				//Version 1.4.6 wollte dazu den Benutzer erst einmal fragen - aber wie ich gefunden habe:
+				//	Der Dialog mit Frage nach Bestätigung erschien keinesfalls vor Fertigstellen des Ladens eines Status in LibreOffice - Dauer 5 Minuten.
+				//	In dieser Situation hatte ein vorzeitiges destroy() aber zu doc==null geführt, Fehlermeldungen, und nicht ersetzten Platzhaltern.
+				//	Vielleicht anschliessend sogar zu nicht gespeichertem Dokument und gegebenenfalls späterer Instabilität?
+				//	Der Dialog erschien jedoch direkt nach Ablauf des Watchdog für den Fall des wegen offener Toolbars etc. hängenden Ladeprozesses :-)
+				//	Und tatsächlich wurde in diesem Moment auch der Ladeprozess abgeschlossen. Ohne, dass noch ein destroy() nötig gewesen wäre.
+				//	Deshalb habe ich aus der MessageDialog.openConfirm() Variante nur noch eine ...openInformation() Variante gemacht.
+				//	Hier wird auf das destroy() verzichtet, und der Anwendern nur noch informiert, dass NOAText die Verzögerung bemerkt hat,
+				//	und woran sie liegen könnte.
+				
+				//Folgendes gehört zur MessageDialog.openInformation() Variante:
+				System.out.println("LoadDocumentOperation: MessageDialog.openInformation: Loading the document has taken too long.");
+				System.out.println("LoadDocumentOperation: MessageDialog.openInformation: Holding watchdog timer counter while dialog is displayed.");
+				
+				//Folgendes gehört zur MessageDialog.openConfirm() Variante:
+				//System.out.println("LoadDocumentOperation: Operator question: Shall internalThread be destroyed?");
+				//System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				//System.out.println("WARNING: We shouldn't use internalthread.suspend, resume, stop, destroy... etc. for good reasons.");
+				//System.out.println("WARNING: Please read the notes in the java online documentation for these methods! 201210210913js");
+				//System.out.println("WARNING: Specifically, using internalThread.suspend() does NOT let the SWTHelper GUI Thread run anyway...");
+				//System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				
+				//201210210850js
+				//SWTHelper.askYesNo() würde das Asynchron machen wollen - und mit allem hier laufenden steckenbleiben.
+				//Also nehme ich den Dialog-Code von dort direkt hierher. Für Shell, MessageDialogs, Desk kommen oben drei imports hinzu. 
+				//Desk.getDisplay();
+				//Shell shell = Desk.getTopShell();
+				//if (MessageDialog.openConfirm(shell, "Warning:",
+				//internalThread.suspend();
+				//if (SWTHelper.askYesNo("Warning:",
+				
+				//if (MessageDialog.openConfirm(null, "Warning:",				
+				MessageDialog.openInformation(null, "Hinweis",
+						 "NOAText: LoadDocumentOperation:\n\n"+
+						 "Das Laden des Dokuments dauert schon länger als "+cyclesWatchdogMaximumAllowedHalfSecs / 2+" sec.\n"+
+						 "Dies kann folgende Ursachen haben:\n\n"+
+						 "(a) Das Starten des Office-Pakets und der Abruf des Dokuments aus der\n"+  //<- in den Dialog zur Bestätigung des watchdog:destroy() als Hinweis schreiben!
+						 "      Datenbank dauern einfach so lang, ohne irgendeine Fehlfunktion.\n\n"+
+						 "      Auf Wunsch kann ich den Grenzwert des Watchdog Timers erhöhen.\n\n"+
+						 "(b) LibreOffice kann zum Öffnen von Dokumenten mit vielen Objekten\n"+  //<- in den Dialog zur Bestätigung des watchdog:destroy() als Hinweis schreiben!
+						 "      mehrere Minuten benötigen - das ist keine Fehlfunktion in Elexis.\n\n"+
+						 //"      Das Problem wird reproduzierbar sichtbar mit meiner experimentellen\n"+
+						 //"      Vorlage zur Dokumentation einer körperlichen Untersuchung auf.\n\n"+
+						 "      Die Wartezeit tritt auch auf, wenn man solche Dokumente ausserhalb\n"+
+						 "      von Elexis öffnet. Im Task-Manager sieht man, dass soffice.bin\n"+
+						 "      arbeitet, und der scheinbare Stillstand endet von selbst.\n\n"+
+						 //"      Allerdings dauert dies z.B. auf einem i7 Q720 schon 5 Minuten.\n\n"+
+						 "      Dies kann allerdings - je nach Dokument - mehrere Minuten dauern.\n\n"+
+						 "      Falls Sie dieses Problem beobachten, sollten Sie bevorzugt\n"+
+						 "      ApacheOpenOffice verwenden. Dieses öffnet solche Dokumente\n"+
+						 "      offenbar ohne grössere Verzögerung.\n\n"+
+						 
+						 //"      Selbst wenn man eine Unterbrechung auslöst, lässt sich\n"+
+						 //"      diese Wartezeit *nicht* verkürzen.\n\n"+
+						 //"      In Folge der versuchten Unterbrechung wird aber das geladene\n"+
+						 //"      Dokument für Elexis nicht ansprechbar sein. Dann erscheinen\n"+
+						 //"      mehrere Fehlermeldungen, und die Platzhalter im Dokument\n"+
+						 //"      werden nicht mit Werten aus Elexis gefüllt.\n\n"+
+						 
+						 "(c) In OpenOffice/LibreOffice abgedockte Toolbars oder Dialoge\n"+
+						 "      können das Öffnen eines Dokuments aus Elexis heraus zum Stillstand\n"+
+						 "      bringen. Auch beliebig langes Warten würde hier *nicht* helfen.\n\n"+
+						 "      Mit der Anzeige dieses Dialogs wird der Stillstand jedoch behoben.\n"+
+						 "      Ausserdem werden in OpenOffice/LibreOffice abgedockte Toolbars\n"+
+						 "      möglichst automatisch gedockt. Beim nächsten Aufruf eines Dokuments\n"+
+						 "      könnte der Auslöser des Fehlers also schon verschwunden sein.\n\n"+
+						 "Falls Sie diese Fehlermeldung häufiger sehen, wäre ich Ihnen für\n"+
+						 "Informationen zu den näheren Umständen dankbar: joerg.sigle@jsigle.com\n\n"
+						 
+						//Folgendes gehört zru If MessageDialog.openInformation() Variante:
+						);
+				System.out.println("LoadDocumentOperation: MessageDialog.openInformation: Resetting watchdog timer counter.");
+				cyclesWaitedForInternalThreadToComplete=0;  //let the watchdog timer start again
+				
+				//		//Folgendes gehört zur If MessageDialog.openConfirm(...) Variante:
+				//		//+"Möchten Sie eine für Situation (a) gedachte Unterbrechung jetzt auslösen?")) {
+				//
+				//		//internalThread.resume();
+				//		//201210210822 - If the user has decided to not destroy, and the process goes on for another watchdog maximum period, he will be asked again.
+				//		System.out.println("LoadDocumentOperation: Operator response: Shall internalThread be destroyed? NO.");
+				//		System.out.println("LoadDocumentOperation: WARNING: Restarting watchdog timer.");
+				//		cyclesWaitedForInternalThreadToComplete=0;  //let the watchdog timer start again
+				//		}
+				//	else {
+				//		//internalThread.resume();
+				//		System.out.println("LoadDocumentOperation: Operator response: Shall internalThread be destroyed? YES.");
+				//		System.out.println("LoadDocumentOperation: ERROR: internalThread timed out; will now be destroyed.");
+				//		System.out.println("WARNING: This functionality should NOT be used except for debugging - see intenalThread.destroy() help .");
+				//		System.out.println("WARNING: Destroying the internalThread is not guaranteed to return Elexis into a responsive state.");
+				//		System.out.println("WARNING: Neither can we guarantee that the document that was about to be opened will appear correctly.");
+				//		System.out.println("WARNING: That said, however, it DID succeed in some tests (4/5), and made the desired document");
+				//		System.out.println("WARNING: appear with LibreOffice in its desired frame, and even the problematic floating dialog windows");
+				//		System.out.println("WARNING: in addition to that - for either the table properties, or the externally opened F11 Formatvorlagen.");
+				//		System.out.println("WARNING: 201202252133js");
+				//		System.out.println("WARNING: For the example of the Status by JS and LibreOffice, however, the waiting will continue");
+				//		System.out.println("WARNING: for almost 5 minutes on i7 720QM (!) with LibreOffice 3.6.2.2, and thereafter, doc==nul");
+				//		System.out.println("WARNING: whereupon findOrReplace() will fail, placeholders will not be filled with data,");
+				//		System.out.println("WARNING: and later on the document may not be saved (?), or the system will still stop after some occurences.");
+				//		System.out.println("WARNING: 201210210807js");
+				//		internalThread.destroy();	//this makes progressMonitor detect the end of the thread at least,
+				//									//but it is deprecated and very error prone. So this should NOT be used except for debugging.
+				//		//  internalThread.stop();	//this does not stop progressMonitor from cycling on and on.
+				//		
+				//		//201210210822 - If we send a destroy while an attempt to open Status Vorlage w/ LibreOffice,
+				//		//the thread will continue to require up to 5 mins anyway. Leaving cyclesWaited... at -1 would not show the dialog again,
+				//		//putting it back to 0 will show it again. Well, it will probably not make things better if used, but keep the user informed at least.  
+				//		cyclesWaitedForInternalThreadToComplete=0;	//let the watchdog timer start again
+				//		Thread.sleep(500);			//Nach dem destroy des anderen Threads lasse ich hier noch eine halbe Sekunde Zeit.
+				//		}
 			}
 			
 		}
