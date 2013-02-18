@@ -5,7 +5,7 @@
 	<classpathentry exported="true" kind="lib" path="bin/"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry exported="true" kind="lib" path="lib/jurt.jar" sourcepath="/libreOffice/incoming/libreoffice-ure-3.3.4.1/jurt"/>
+	<classpathentry exported="true" kind="lib" path="lib/jurt.jar" sourcepath=""/>
 	<classpathentry exported="true" kind="lib" path="lib/officebean.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java_uno_accessbridge.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/java_uno.jar" sourcepath=""/>
