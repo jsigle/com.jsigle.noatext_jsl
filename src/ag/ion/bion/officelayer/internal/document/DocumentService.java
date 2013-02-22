@@ -72,7 +72,7 @@ import com.sun.star.uno.UnoRuntime;
 /**
  * Service for documents.
  * 
- * @author Andreas Brueker
+ * @author Andreas Bröker
  * @version $Revision: 11756 $
  */
 public class DocumentService implements IDocumentService {
@@ -98,10 +98,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws IllegalArgumentException if the submitted office connection is not valid
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public DocumentService(IOfficeConnection officeConnection, IServiceProvider serviceProvider)
       throws IllegalArgumentException {
+
+	System.out.println("DocumentService: DocumentService(officeConnection, serviceProvider) constructor begin");
     if (officeConnection == null)
       throw new IllegalArgumentException("The submitted office connection is not valid."); //$NON-NLS-1$
     this.officeConnection = officeConnection;
@@ -119,10 +121,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws NOAException if the new document can not be constructed
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument constructNewDocument(String documentType, IDocumentDescriptor documentDescriptor)
       throws NOAException {
+	
+	System.out.println("DocumentService: constructNewDocument(documentType, documentDescriptor) begin");
     return constructNewDocument(null, documentType, documentDescriptor);
   }
 
@@ -150,10 +154,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws NOAException if the new document can not be constructed
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument constructNewDocument(IFrame frame, String documentType,
       IDocumentDescriptor documentDescriptor) throws NOAException {
+
+	System.out.println("DocumentService: constructNewDocument(frame, documentType, documentDescriptor) begin");
     try {
       if (xComponentLoader == null)
         xComponentLoader = constructComponentLoader();
@@ -220,10 +226,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws NOAException if the document can not be contructed
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    * @date 16.03.2006
    */
   public IDocument constructNewHiddenDocument(String documentType) throws NOAException {
+	
+	System.out.println("DocumentService: constructNewHiddenDocument(documentType) begin");
     return constructNewDocument(documentType, DocumentDescriptor.DEFAULT_HIDDEN);
   }
 
@@ -238,9 +246,11 @@ public class DocumentService implements IDocumentService {
    * @throws DocumentException if the document can not be loaded or the URL does
    * not locate an OpenOffice.org document
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument loadDocument(String url) throws DocumentException {
+
+	System.out.println("DocumentService: loadDocument(url) begin");
     try {
       url = URLAdapter.adaptURL(url);
       IDocument document = DocumentLoader.loadDocument(serviceProvider, url);
@@ -268,11 +278,13 @@ public class DocumentService implements IDocumentService {
    * @throws NOAException if the document can not be loaded or the URL does
    * not locate an OpenOffice.org document
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    * @date 02.07.2006
    */
   public IDocument loadDocument(String url, IDocumentDescriptor documentDescriptor)
       throws NOAException {
+	
+	System.out.println("DocumentService: loadDocument(url, documentDescriptor) begin");
     try {
       PropertyValue[] propertyValues = DocumentDescriptorTransformer.documentDescriptor2PropertyValues(documentDescriptor);
       url = URLAdapter.adaptURL(url);
@@ -290,6 +302,7 @@ public class DocumentService implements IDocumentService {
   //----------------------------------------------------------------------------
   /**
    * Loads document on the basis of the submitted stream.
+   * May be <b>significantly slower</b> than the load* variants which take an URL String as parameter.
    * 
    * @param inputStream input stream to be used
    * @param documentDescriptor document descriptor to be used
@@ -298,11 +311,13 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws DocumentException if the document can not be loaded
    * 
-   * @author Andreas Brueker
-   * @author Markus Krueger
+   * @author Andreas Bröker
+   * @author Markus Krüger
    */
   public IDocument loadDocument(InputStream inputStream, IDocumentDescriptor documentDescriptor)
       throws DocumentException {
+
+	System.out.println("DocumentService: loadDocument(inputStream, documentDescriptor) begin");
     return loadDocument(null, null, inputStream, documentDescriptor);
   }
 
@@ -315,6 +330,8 @@ public class DocumentService implements IDocumentService {
    * OpenOffice.org can not recognize if the document is already open - 
    * therefore the document will be never opened in <code>ReadOnly</code> mode.</b>
    * 
+   * May be <b>significantly slower</b> than the load* variants which take an URL String as parameter.
+   * 
    * @param frame frame to be used for the document
    * @param inputStream input stream to be used
    * @param documentDescriptor document descriptor to be used
@@ -323,16 +340,19 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws DocumentException if the document can not be loaded
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument loadDocument(IFrame frame, InputStream inputStream,
       IDocumentDescriptor documentDescriptor) throws DocumentException {
+
+	System.out.println("DocumentService: loadDocument(frame, inputStream, documentDescriptor) begins");
     return loadDocument(null, frame, inputStream, documentDescriptor);
   }
 
   //----------------------------------------------------------------------------
   /**
    * Loads document on the basis of the submitted stream.
+   * May be <b>significantly slower</b> than the load* variants which take an URL String as parameter.
    * 
    * @param officeProgressMonitor office progress monitor to be used
    * @param inputStream input stream to be used
@@ -342,10 +362,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws DocumentException if the document can not be loaded
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument loadDocument(IOfficeProgressMonitor officeProgressMonitor,
       InputStream inputStream, IDocumentDescriptor documentDescriptor) throws DocumentException {
+
+	System.out.println("DocumentService: loadDocument(officeProgressMonitor, inputStream, documentDescriptor) begin");
     return loadDocument(officeProgressMonitor, null, inputStream, documentDescriptor);
   }
 
@@ -358,6 +380,8 @@ public class DocumentService implements IDocumentService {
    * OpenOffice.org can not recognize if the document is already open - 
    * therefore the document will be never opened in <code>ReadOnly</code> mode.</b>
    * 
+   * May be <b>significantly slower</b> than the load* variants which take an URL String as parameter.
+   * 
    * @param officeProgressMonitor office progress monitor to be used
    * @param frame frame to be used for the document
    * @param inputStream input stream to be used
@@ -367,11 +391,14 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws DocumentException if the document can not be loaded
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument loadDocument(IOfficeProgressMonitor officeProgressMonitor, IFrame frame,
       InputStream inputStream, IDocumentDescriptor documentDescriptor) throws DocumentException {
-    XComponent xComponent = null;
+
+	System.out.println("DocumentService: loadDocument(officeProgressMonitor, frame, inputStream, documentDescriptor) begin");
+
+	XComponent xComponent = null;
     PropertyValue[] properties = new PropertyValue[1];
     try {
       if (inputStream == null)
@@ -427,10 +454,12 @@ public class DocumentService implements IDocumentService {
    * @throws DocumentException if the document can not be loaded, the URL does
    * not locate an OpenOffice.org document of the submitted frame or URL is not valid
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument loadDocument(IFrame frame, String url) throws DocumentException {
-    return loadDocument(frame, url, null);
+	System.out.println("DocumentService: loadDocument(frame, url) begin");
+
+	return loadDocument(frame, url, null);
   }
 
   //----------------------------------------------------------------------------
@@ -446,45 +475,79 @@ public class DocumentService implements IDocumentService {
    * @throws DocumentException if the document can not be loaded, the URL does
    * not locate an OpenOffice.org document or the submitted frame or URL is not valid
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public IDocument loadDocument(IFrame frame, String url, IDocumentDescriptor documentDescriptor)
       throws DocumentException {
-	  System.out.println("DocumentService: loadDocument() begins");
+	
+	System.out.println("DocumentService: loadDocument(frame, url, documentDescriptor) begin");
+	
+	if (url == null)				System.out.println("DocumentService: loadDocument(): url==null");
+	else							System.out.println("DocumentService: loadDocument(): url=" + url.toString());
+	if (frame == null)				System.out.println("DocumentService: loadDocument(): frame==null");
+	else							System.out.println("DocumentService: loadDocument(): frame=" + frame.toString());
 
 	if (url == null)
       throw new DocumentException("The submitted url is not valid."); //$NON-NLS-1$
 
     try {
       url = URLAdapter.adaptURL(url);
-      IDocument document = null;
+  	  if (url == null)				System.out.println("DocumentService: loadDocument(): adapted url==null");
+  	  else							System.out.println("DocumentService: loadDocument(): adapted url=" + url.toString());
+
+  	  IDocument document = null;
       if (frame == null) {
+    	System.out.println("DocumentService: loadDocument(): frame NOT available yet - loading document without specified frame");
         document = DocumentLoader.loadDocument(serviceProvider,
-            url,
-            DocumentDescriptorTransformer.documentDescriptor2PropertyValues(documentDescriptor));
+        			url,
+        			DocumentDescriptorTransformer.documentDescriptor2PropertyValues(documentDescriptor));
       }
       else {
-    	  System.out.println("DocumentService: DocumentLoader.loadDocument()...");
-        document = DocumentLoader.loadDocument(serviceProvider,
-            frame.getXFrame(),
-            url,
-            FrameSearchFlag.ALL,
-            DocumentDescriptorTransformer.documentDescriptor2PropertyValues(documentDescriptor));
+    	System.out.println("DocumentService: loadDocument(): frame IS ALREADY available - loading document into specified frame");
+    	System.out.println("DocumentService: loadDocument(): or rather into frame.getXFrame():");
+    	System.out.println("DocumentService: loadDocument(): frame.getXFrame(): "+frame.getXFrame().toString());
+    	
+    	document = DocumentLoader.loadDocument(serviceProvider,
+            frame.getXFrame(),			//201302200531js: Es verbessert auch nichts, das über eine lokale Variable zu übergeben.
+        	url,
+        	//201302200534js
+        	//Problem: In Linux erreiche ich es nicht, dass ein Dokument in den übergebenen frame via frame.getXFrame() hineingeht.
+        	//Also schaue ich mal, ob ich mit anderen FrameSearchFlags weiterkomme:
+            
+        	FrameSearchFlag.ALL,
+        	//FrameSearchFlag.ALL,		//Original-Code, damit erscheint in Linux das geöffnete Dokument nirgends (wenn Zielframe existiert hat),
+        								//Allerdings bekommt der Zielframe in seinem Tab den Namen des Patiente/Briefes, und unter Windows funktioniert es.
+        	//FrameSearchFlag.GLOBAL,	//Wie ALL
+        	//FrameSearchFlag.SELF,		//WIE ALL
+
+        	//FrameSearchFlag.AUTO,		//Damit erscheint der Inhalt in neuem Fenster (wenn Zielframe existiert hat),
+        								//Allerdings bekommt auch hier der Zielframe (!!) den Namen des Patienten/Briefes
+        								//Das neue Window bekommt den Dateinamen (URL) der Temporärdatei.
+        	//FrameSearchFlag.CHILDREN,	//Wie AUTO
+        	//FrameSearchFlag.CREATE,	//Wie AUTO
+        	//FrameSearchFlag.PARENT,	//Wie AUTO
+        	//FrameSearchFlag.SIBLINGS,	//Wie AUTO
+        	//FrameSearchFlag.TASKS,	//Wie AUTO
+        	DocumentDescriptorTransformer.documentDescriptor2PropertyValues(documentDescriptor));      
       }
-		      
+      
+      System.out.println("DocumentService: loadDocument(): result:");		      
+      
       if (document != null) {
-    	  System.out.println("DocumentService: DocumentLoader: SUCCESS: document="+ document.toString());
-    	  System.out.println("DocumentService: DocumentLoader: About to return document...");
+    	  System.out.println("DocumentService: loadDocument(): SUCCESS: document="+ document.toString());
+    	  System.out.println("DocumentService: loadDocument(): document.getFrame()="+ document.getFrame().toString());
+    	  System.out.println("DocumentService: loadDocument(): document.getFrame().getXFrame()="+document.getFrame().getXFrame().toString());		      
+          System.out.println("DocumentService: loadDocument(): About to return document...");
         return document;
       }
       else {
-    	  System.out.println("DocumentService: DocumentLoader: WARNING: FAILED; document==null");
-    	  System.out.println("DocumentService: DocumentLoader: About to throw DocumentException...");
+    	  System.out.println("DocumentService: loadDocument(): WARNING: FAILED; document==null");
+    	  System.out.println("DocumentService: loadDocument(): About to throw DocumentException...");
         throw new DocumentException(Messages.getString("DocumentService_exception_url_invalid")); //$NON-NLS-1$
       }
     }
     catch (Exception exception) {
-  	  System.out.println("DocumentService: DocumentLoader: WARNING: Caught document exception.");
+  	  System.out.println("DocumentService: loadDocument(): WARNING: Caught document exception.");
       DocumentException documentException = new DocumentException(exception.getMessage());
       documentException.initCause(exception);
       throw documentException;
@@ -499,9 +562,11 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws DocumentException if the documents cannot be provided
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    */
   public IDocument[] getCurrentDocuments() throws DocumentException {
+	
+	System.out.println("DocumentService: getCurrentDocuments() begin");
     return getCurrentDocuments(serviceProvider);
   }
 
@@ -513,10 +578,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @return number documents of an application
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    * @date 11.11.2008
    */
   public int getCurrentDocumentCount() throws DocumentException {
+	
+	System.out.println("DocumentService: getCurrentDocumentCount() begin");
     return getCurrentDocumentCount(serviceProvider);
   }
 
@@ -528,11 +595,13 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws DocumentException if the documents cannot be provided
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    * @date 11.11.2008
    */
   public static IDocument[] getCurrentDocuments(IServiceProvider serviceProvider)
       throws DocumentException {
+	
+	System.out.println("DocumentService: getCurrentDocuments(serviceProvider) begin");
     try {
       if (serviceProvider == null)
         return new IDocument[0];
@@ -561,11 +630,13 @@ public class DocumentService implements IDocumentService {
    * 
    * @return number documents of an application
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    * @date 11.11.2008
    */
   public static int getCurrentDocumentCount(IServiceProvider serviceProvider)
       throws DocumentException {
+	
+	System.out.println("DocumentService: getCurrentDocumentCount(serviceProvider) begin");
     try {
       int i = 0;
       if (serviceProvider == null)
@@ -593,10 +664,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws NOAException if the OpenOffice.org instance reached the number of maximum open documents.
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    * @date 11.11.2008
    */
   public static void checkMaxOpenDocuments(IServiceProvider serviceProvider) throws NOAException {
+	
+	System.out.println("DocumentService: checkmaxOpenDocuments(serviceProvider) begin");
     try {
       if (serviceProvider != null && getCurrentDocumentCount(serviceProvider) >= IDocumentService.MAX_OPENED_DOCS)
         throw new NOAException("The maximum number of opend documents was reached (Maximum number is " + IDocumentService.MAX_OPENED_DOCS //$NON-NLS-1$
@@ -611,7 +684,7 @@ public class DocumentService implements IDocumentService {
   /**
    * Disposes all allocated resources.
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    */
   public void dispose() {
   }
@@ -624,10 +697,12 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws NOAException if the new database document can not be constructed
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    * @date 16.03.2006
    */
   private IDatabaseDocument constructDatabaseDocument() throws NOAException {
+	
+	System.out.println("DocumentService: constructDatabaseDocument() begin");
     try {
       Object dataSource = officeConnection.getXMultiComponentFactory().createInstanceWithContext("com.sun.star.sdb.DataSource",
           officeConnection.getXComponentContext());
@@ -652,9 +727,11 @@ public class DocumentService implements IDocumentService {
    * 
    * @throws Exception if the OpenOffice.org XComponentLoader can not be constructed
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    */
   private XComponentLoader constructComponentLoader() throws Exception {
+	
+	System.out.println("DocumentService: constructComponentLoader() begin");
     Object oDesktop = officeConnection.getXMultiComponentFactory().createInstanceWithContext("com.sun.star.frame.Desktop", officeConnection.getXComponentContext()); //$NON-NLS-1$
     return (XComponentLoader) UnoRuntime.queryInterface(XComponentLoader.class, oDesktop);
   }

@@ -97,7 +97,14 @@ public class EditorCorePlugin extends Plugin {
   //Original PLUGIN_ID in NOA for Eclipse application or examples
   //public static final String PLUGIN_ID = "ag.ion.bion.workbench.office.editor.core";
   //public static final String PLUGIN_ID = "com.jsigle.noatext_jsl";
-  public static final String PLUGIN_ID = "com.jsigle.noatext";
+
+  //Also see src/ag/ion/bion/workbench/office/editor/core/EditorCorePlugin.java where this string is also hardcoded (with/without _jsl)
+  //Also see noa4e/internal/ui/preferences/LocalOfficeApplicationPreferencesPage.java (with/without _jsl) 
+  //Also see com/jsigle/noa/NOAText.java where this string is also hardcoded (with//without _jsl)
+		
+  //201302210135 corrected the plugin ID for 1.4.7 from com.jsigle.noatext to noatext_jsl
+  //public static final String PLUGIN_ID = "com.jsigle.noatext";
+  public static final String PLUGIN_ID = "com.jsigle.noatext_jsl";
   
   //The shared instance.
   private static EditorCorePlugin plugin;
@@ -162,6 +169,10 @@ public class EditorCorePlugin extends Plugin {
     System.out.println("EditorCorePlugin: ToDo: (Even) when the noa libraries are not separately available, that cures these errors:");
     System.out.println("EditorCorePlugin: ToDo: 'An error occured while automatically activating bundle: ch.elexis.noatext_jsl or com.jsigle.noatext_jsl'");
     System.out.println("EditorCorePlugin: ToDo: 'Unable to create the selected preference page. ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage'");
+    System.out.println("EditorCorePlugin: ToDo:");
+    System.out.println("EditorCorePlugin: ToDo: Also see src/ag/ion/bion/workbench/office/editor/core/EditorCorePlugin.java where this string is also hardcoded (with/without _jsl)");
+    System.out.println("EditorCorePlugin: ToDo: Also see noa4e/internal/ui/preferences/LocalOfficeApplicationPreferencesPage.java where this string is also hardcoded (with/without _jsl)");
+    System.out.println("EditorCorePlugin: ToDo: Also see com/jsigle/noa/NOAText.java where this string is also hardcoded (with/without _jsl)");
     System.out.println("EditorCorePlugin: ToDo:");
     System.out.println("EditorCorePlugin: ToDo: A 'semi intelligent' alternative aproach would be:");
     System.out.println("EditorCorePlugin: ToDo: [if getLibrariesLocation()==null then use empty string, else use getLibrariesLocation()]");
@@ -294,12 +305,26 @@ public class EditorCorePlugin extends Plugin {
      * Workaround in order to integrate the OpenOffice.org window into a AWT frame
      * on Linux based systems. 
      */
+    
+    System.out.println("EditorCorePlugin: *********************************************************************************************");
+    System.out.println("EditorCorePlugin: Workaround to integrate OpenOffice.org window into an AWT frame on Linux: try new Frame();");
+    System.out.println("EditorCorePlugin: Workaround: Apparently, this does not work any more. Now, tried it without that...");
+    System.out.println("EditorCorePlugin: Workaround: ...which produces nothing different at all. No luck getting content into a frame.");
+    System.out.println("EditorCorePlugin: Workaround: TO DO: WE CAN POSSIBLY DISABLE THIS PERMANENTLY. Temp reenabled it again for now.");
+    System.out.println("EditorCorePlugin: *********************************************************************************************");
+    
+    /*201302210124js tried disabling this:*/ 
     try {
-      new Frame();
+    	System.out.println("EditorCorePlugin: Workaround: about to try: new Frame();");
+        new Frame();
+        System.out.println("EditorCorePlugin: Workaround: returned from new Frame();");
     }
     catch(Throwable throwable) {
+        System.out.println("EditorCorePlugin: Workaround: new Frame() threw an error that should only occur in headless mode...");
       //only occurs in headless mode, where it doesn't matter
     }
+    /* */    
+    
   }
   //----------------------------------------------------------------------------
   /**

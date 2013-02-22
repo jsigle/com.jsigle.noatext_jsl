@@ -18,7 +18,7 @@
  * the Free Software Foundation, either version 2.1 of the License.         *
  *                                                                          *
  *  This program is distributed in the hope that it will be useful,         *
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of          *
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of           *
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the           *
  *  GNU General Public License for more details.                            *
  *                                                                          *
@@ -92,7 +92,7 @@ import com.sun.star.uno.UnoRuntime;
 /**
  * Document loading helper class. 
  * 
- * @author Andreas Brueker
+ * @author Andreas Bröker
  * @version $Revision: 11724 $
  */
 public class DocumentLoader {
@@ -111,6 +111,8 @@ public class DocumentLoader {
    */
   public static IDocument loadDocument(IServiceProvider serviceProvider, String URL)
       throws Exception, IOException {
+	
+	System.out.println("DocumentLoader: loadDocument(serviceProvider, URL) begin");
     return loadDocument(serviceProvider, URL, null);
   }
 
@@ -129,6 +131,8 @@ public class DocumentLoader {
    */
   public static IDocument loadDocument(IServiceProvider serviceProvider, String URL,
       PropertyValue[] properties) throws Exception, IOException {
+
+	System.out.println("DocumentLoader: loadDocument(serviceProvider, URL, properties) begin");
     if (properties == null) {
       properties = new PropertyValue[0];
     }
@@ -152,6 +156,8 @@ public class DocumentLoader {
    */
   public static IDocument loadDocument(IServiceProvider serviceProvider, XInputStream xInputStream)
       throws Exception, IOException {
+	
+	System.out.println("DocumentLoader: loadDocument(serviceProvider, xInputStream) begin");
     return loadDocument(serviceProvider, xInputStream, null);
   }
 
@@ -170,7 +176,10 @@ public class DocumentLoader {
    */
   public static IDocument loadDocument(IServiceProvider serviceProvider, XInputStream xInputStream,
       PropertyValue[] properties) throws Exception, IOException {
-    if (properties == null) {
+	
+	System.out.println("DocumentLoader: loadDocument(serviceProvider, xInputStream, properties) begin");
+
+	if (properties == null) {
       properties = new PropertyValue[0];
     }
     PropertyValue[] newProperties = new PropertyValue[properties.length + 1];
@@ -215,19 +224,19 @@ public class DocumentLoader {
   public static IDocument loadDocument(IServiceProvider serviceProvider, XFrame xFrame, String URL,
       int searchFlags, PropertyValue[] properties) throws Exception, IOException {
 	  
-	  System.out.println("DocumentLoader: loadDocument(5) begin");
+	  System.out.println("DocumentLoader: loadDocument(serviceProvider, xFrame, URL, searchFlags, properties) begin");
+	  
 	  if (xFrame==null)		System.out.println("DocumentLoader: loadDocument(5): xFrame==null");
 	  else {
 		 System.out.println("DocumentLoader: loadDocument(5): xFrame="+xFrame.toString());
 		 System.out.println("DocumentLoader: loadDocument(5): xFrame.getCreator()="+xFrame.getCreator());
 		 System.out.println("DocumentLoader: loadDocument(5): xFrame.getName()="+xFrame.getName());
 	  }
-
+	  
 	  if (properties==null)	System.out.println("DocumentLoader: loadDocument(5): properties==null");
 	  else 	  				System.out.println("DocumentLoader: loadDocument(5): properties="+properties.toString());
 
-
-	  if (xFrame != null) {
+    if (xFrame != null) {
       if (properties == null) {
         properties = new PropertyValue[0];
       }
@@ -237,9 +246,9 @@ public class DocumentLoader {
       if (properties==null)	System.out.println("DocumentLoader: loadDocument(5): xComponentLoader==null");
 	  else 	  				System.out.println("DocumentLoader: loadDocument(5): xComponentLoader="+xComponentLoader .toString());
       
-      System.out.println("DocumentLoader: loadDocument(5): about to directly return loadDocument(6)...");
+      System.out.println("DocumentLoader: loadDocument(5): about to call and directly return loadDocument(6)...");
 
-	  return loadDocument(serviceProvider,
+      return loadDocument(serviceProvider,
           xComponentLoader,
           URL,
           xFrame.getName(),
@@ -248,7 +257,7 @@ public class DocumentLoader {
     }
 
 	  System.out.println("DocumentLoader: loadDocument(5): WARNING: about to return null");
-	  return null;
+    return null;
   }
 
   //----------------------------------------------------------------------------
@@ -276,15 +285,16 @@ public class DocumentLoader {
       XComponentLoader xComponentLoader, String URL, String targetFrameName, int searchFlags,
       PropertyValue[] properties) throws Exception, IOException {
 	  
-	 System.out.println("DocumentLoader: loadDocument(6) begins");
+	 System.out.println("DocumentLoader: loadDocument(serviceProvider, xComponentLoader, URL, targetFramename, searchFlags, properties) begins");
 	 System.out.println("DocumentLoader: loadDocument(6): checkMaxOpenDocuments()...");
 
-	  DocumentService.checkMaxOpenDocuments(serviceProvider);
+    DocumentService.checkMaxOpenDocuments(serviceProvider);
+	  
 	  System.out.println("DocumentLoader: loadDocument(6): xComponentLoader.loadComponentFromURL(4)...");
-	  if (URL==null)	System.out.println("DocumentLoader: URL==null");
-	  else 	  				System.out.println("DocumentLoader: URL="+URL.toString());
-	  if (targetFrameName==null)	System.out.println("DocumentLoader: targetFrameName==null");
-	  else 	  				System.out.println("DocumentLoader: targetFrameName="+URL.toString());
+	  if (URL==null)	    System.out.println("DocumentLoader: loadDocument(6): URL==null");
+	  else 	  				System.out.println("DocumentLoader: loadDocument(6): URL="+URL.toString());
+	  if (targetFrameName==null)	System.out.println("DocumentLoader: loadDocument(6): targetFrameName==null");
+	  else 	  				System.out.println("DocumentLoader: loadDocument(6): targetFrameName="+targetFrameName.toString());
 	  System.out.println("DocumentLoader: searchFlags="+searchFlags);
 	  if (properties==null)	System.out.println("DocumentLoader: properties==null");
 	  else 	  				System.out.println("DocumentLoader: properties="+properties.toString());
@@ -298,14 +308,13 @@ public class DocumentLoader {
 	  //201202251835js: Für's Debugging mal den Aufruf durch Zuweisung von null ersetzt.
 	  //Dann läuft es durch, auch wenn in OO/LO Dialoge geöffnet wären, aber natürlich wird das Dokument nicht in den Frame geladen.
 	  //XComponent xComponent = null;	   
-	  XComponent xComponent = xComponentLoader.loadComponentFromURL(URL,
+    XComponent xComponent = xComponentLoader.loadComponentFromURL(URL,
         targetFrameName,
         searchFlags,
         properties);
-          	
-  if (xComponent != null) {
-    	System.out.println("DocumentLoader: loadDocument(6): about to return getDocument(3)...");
-  return getDocument(xComponent, serviceProvider, properties);
+    if (xComponent != null) {
+    	System.out.println("DocumentLoader: loadDocument(6): about call and directly return getDocument(3)...");
+      return getDocument(xComponent, serviceProvider, properties);
     }
     
     System.out.println("DocumentLoader: loadDocument(6): about to throw IOException: Document not found");
@@ -331,14 +340,14 @@ public class DocumentLoader {
    */
   public static IDocument getDocument(XComponent xComponent, IServiceProvider serviceProvider,
       PropertyValue[] intitialProperties) {
-	System.out.println("DocumentLoader: getDocument(3) begin");
+	System.out.println("DocumentLoader: getDocument(xComponent, serviceProvider, initialProperties) begin");
 		
     if (intitialProperties == null) {
       intitialProperties = new PropertyValue[0];
     }
     IDocument document = null;
     
-    System.out.println("DocumentLoader: getDocument(3) xServiceInfo=...UnoRuntime.queryInterface(2)...");
+    System.out.println("DocumentLoader: getDocument(3): xServiceInfo=...UnoRuntime.queryInterface(2)...");
 	
     XServiceInfo xServiceInfo = (XServiceInfo) UnoRuntime.queryInterface(XServiceInfo.class,
         xComponent);
@@ -351,19 +360,19 @@ public class DocumentLoader {
 	}
 	
     if (xServiceInfo.supportsService("com.sun.star.text.TextDocument")) {
-    	System.out.println("DocumentLoader: getDocument(3) xServiceInfo supports com.sun.star.text.TextDocument");
-    	System.out.println("DocumentLoader: getting xTextDocument...");
+    	System.out.println("DocumentLoader: getDocument(3): xServiceInfo supports com.sun.star.text.TextDocument");
+    	System.out.println("DocumentLoader: getDocument(3): getting xTextDocument...");
     	
-    	XTextDocument xTextDocument = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class,
+      XTextDocument xTextDocument = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class,
           xComponent);
     	
     	if (xTextDocument==null)	System.out.println("DocumentLoader: getDocument(3): WARNING: xTextDocument==null");
     	else 						System.out.println("DocumentLoader: getDocument(3): xTextDocument="+xTextDocument.toString());
     	
-    	if (xTextDocument != null) {
+      if (xTextDocument != null) {
     		System.out.println("DocumentLoader: getDocument(3): allocating document from TextDocument(xTextDocument, initialProperties)...");
-    		document = new TextDocument(xTextDocument, intitialProperties);
-    	   	}
+        document = new TextDocument(xTextDocument, intitialProperties);
+      }
     }
     else if (xServiceInfo.supportsService("com.sun.star.sheet.SpreadsheetDocument")) {
       XSpreadsheetDocument xSpreadsheetDocument = (XSpreadsheetDocument) UnoRuntime.queryInterface(XSpreadsheetDocument.class,
@@ -429,17 +438,18 @@ public class DocumentLoader {
           break;
         }
       }
-      //XXX WORKAROUND: If you have an app with more than one openoffice noa integrated frames,
-      //then the second frame and upwards is sometimes not displayed under linux.
-      //The following lines of code works around this issue.
+      //XXX WORKAROUND: If you haven an app with more than one openoffice noa integrated frames, then the second frame and upwards is sometimes
+      //not displayed under linux. The following lines of code works around this issue.
       if (!isHidden) {
-        XWindow containerWindow = document.getFrame().getXFrame().getContainerWindow();
-        containerWindow.setVisible(false);
-        containerWindow.setVisible(true);
+        if (document.getServiceProvider() != null) {
+          XWindow containerWindow = document.getFrame().getXFrame().getContainerWindow();
+          containerWindow.setVisible(false);
+          containerWindow.setVisible(true);
+        }
       }
     }
     System.out.println("DocumentLoader: getDocument(3): About to return document...");
-	return document;
+    return document;
   }
 
   //----------------------------------------------------------------------------

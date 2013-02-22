@@ -155,13 +155,24 @@ public class OfficePanel extends Composite {
 	public OfficePanel(Composite parent, int style,
 			IOfficeApplication officeApplication) {
 		super(parent, style);
-		System.out
-				.println("OfficePanel: OfficePanel - just supered - Constructs new OfficePanel");
+		System.out.println("OfficePanel: OfficePanel(3): just returned from super(parent, style)");
+		
+		
+		System.out.println("OfficePanel: OfficePanel(3): about to buildControls()");
 		buildControls();
+		System.out.println("OfficePanel: OfficePanel(3): just returned from buildControls()");
+		
+		if (officeApplication == null)	System.out.println("OfficePanel: OfficePanel(3): officeApplication==null");
+		else							System.out.println("OfficePanel: OfficePanel(3): officeApplication=" + officeApplication.toString());
+
 		if (officeApplication == null) {
+			System.out.println("OfficePanel: OfficePanel(3): about to EditorCorePlugin.getDefault().getManagedLocalOfficeApplication()");
 			officeApplication = EditorCorePlugin.getDefault()
 					.getManagedLocalOfficeApplication();
 		}
+
+		if (officeApplication == null)	System.out.println("OfficePanel: OfficePanel(3): WARNING: about to return this.officeApplication==null");
+		else							System.out.println("OfficePanel: OfficePanel(3): returning this.officeApplication=" + officeApplication.toString());
 		this.officeApplication = officeApplication;
 	}
 
@@ -179,7 +190,10 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	public IFrame getFrame() {
-		System.out.println("OfficePanel: getFrame");
+		System.out.println("OfficePanel: getFrame()");
+		if (officeFrame == null)	System.out.println("OfficePanel: getFrame(): WARNING: about to return officeFrame==null");
+		else						System.out.println("OfficePanel: getFrame(): returning officeFrame=" + officeFrame.toString());
+		
 		return officeFrame;
 	}
 
@@ -196,14 +210,10 @@ public class OfficePanel extends Composite {
 	 * @date 19.03.2007
 	 */
 	public IDocument getDocument() {
-		System.out.println("OfficePanel: getDocument");
+		System.out.println("OfficePanel: getDocument()");
 
-		if (document == null)
-			System.out
-					.println("OfficePanel: WARNING: Please note: will return document==null");
-		else
-			System.out.println("OfficePanel: will return document="
-					+ document.toString());
+		if (document == null)	System.out.println("OfficePanel: getDocument(): WARNING: about to return document==null");
+		else					System.out.println("OfficePanel: getDocument(): returning document=" + document.toString());
 
 		return document;
 	}
@@ -219,7 +229,11 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	public boolean setFocus() {
-		System.out.println("OfficePanel: setFocus");
+		System.out.println("OfficePanel: setFocus()");
+
+		if (officeFrame == null)	System.out.println("OfficePanel: setFocus(): WARNING: officeFrame==null; will return super.setFocus() instead");
+		else						System.out.println("OfficePanel: setFocus(): about to officeFrame.setFocus() for officeFrame=" + officeFrame.toString());
+		
 		if (officeFrame != null) {
 			officeFrame.setFocus();
 			return true;
@@ -243,7 +257,9 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	public void setBuildAlwaysNewFrames(boolean buildAlwaysNewFrames) {
-		System.out.println("OfficePanel: setBuildAlwaysNewFrames");
+		System.out.println("OfficePanel: setBuildAlwaysNewFrames(buildAlwaysNewFrames)");
+		System.out.println("OfficePanel: setBuildAlwaysNewFrames(): about to set this.buildAlwaysNewFrames="+buildAlwaysNewFrames);
+		
 		this.buildAlwaysNewFrames = buildAlwaysNewFrames;
 	}
 
@@ -263,7 +279,8 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	public void showProgressIndicator(boolean showProgressIndicator) {
-		System.out.println("OfficePanel: showProgressIndicator");
+		System.out.println("OfficePanel: showProgressIndicator(showProgressIndicator)");
+		System.out.println("OfficePanel: showProgressIndicator(): about to set this.showProgressIndicator="+showProgressIndicator);
 		this.showProgressIndicator = showProgressIndicator;
 	}
 
@@ -287,100 +304,60 @@ public class OfficePanel extends Composite {
 	 */
 	public final void loadDocument(boolean fork, final String documentPath,
 			final IDocumentDescriptor documentDescriptor) {
-		System.out.println("OfficePanel: loadDocument");
+		System.out.println("OfficePanel: loadDocument(fork, documentPath, documentDescriptor) begin");
 
 		if (isDisposed()) {
-			System.out
-					.println("OfficePanel: loadDocument: WARNING: isDisposed==true; will return immediately.");
+			System.out.println("OfficePanel: loadDocument(3): WARNING: isDisposed==true; will return immediately.");
 			return;
 		}
 
-		System.out
-				.println("OfficePanel: loadDocument: Status before doing the work:");
-		if (documentPath == null)
-			System.out.println("OfficePanel: documentPath==null");
-		else
-			System.out.println("OfficePanel: documentPath=" + documentPath);
-		if (currentDocumentPath == null)
-			System.out.println("OfficePanel: currentDocumentPath==null");
-		else
-			System.out.println("OfficePanel: currentDocumentPath="
-					+ currentDocumentPath);
-		if (document == null)
-			System.out.println("OfficePanel: document==null");
-		else
-			System.out.println("OfficePanel: document=" + document.toString());
-		if (officeFrame == null)
-			System.out.println("OfficePanel: officeFrame==null");
-		else
-			System.out.println("OfficePanel: officeFrame="
-					+ officeFrame.toString());
-		if (lastLoadingStatus == null)
-			System.out.println("OfficePanel: lastLoadingStatus==null");
-		else
-			System.out.println("OfficePanel: lastLoadingStatus="
-					+ lastLoadingStatus.toString());
-
-		if (documentPath != null
-				&& (currentDocumentPath == null || !currentDocumentPath
-						.equals(documentPath))) {
+		System.out.println("OfficePanel: loadDocument(3): Status before doing the work:");
+		if (documentPath == null)			System.out.println("OfficePanel: loadDocument(3): documentPath==null");
+		else								System.out.println("OfficePanel: loadDocument(3): documentPath=" + documentPath);
+		if (currentDocumentPath == null)	System.out.println("OfficePanel: loadDocument(3): currentDocumentPath==null");
+		else								System.out.println("OfficePanel: loadDocument(3): currentDocumentPath="+ currentDocumentPath);
+		if (document == null)				System.out.println("OfficePanel: loadDocument(3): document==null");
+		else								System.out.println("OfficePanel: loadDocument(3): document=" + document.toString());
+		if (officeFrame == null)			System.out.println("OfficePanel: loadDocument(3): officeFrame==null");
+		else								System.out.println("OfficePanel: loadDocument(3): officeFrame=" + officeFrame.toString());
+		if (lastLoadingStatus == null)		System.out.println("OfficePanel: loadDocument(3): lastLoadingStatus==null");
+		else								System.out.println("OfficePanel: loadDocument(3): lastLoadingStatus=" + lastLoadingStatus.toString());
+		
+		if (documentPath != null && (currentDocumentPath == null || !currentDocumentPath.equals(documentPath))) {
 			try {
 
-				System.out
-						.println("OfficePanel: loadDocument: Setting currentDocumentPath=documentPath;");
+				System.out.println("OfficePanel: loadDocument(3): Setting currentDocumentPath=documentPath;");
 
 				currentDocumentPath = documentPath;
 				if (document != null && buildAlwaysNewFrames) {
-					System.out
-							.println("OfficePanel: loadDocument: closing currently open document...");
+					System.out.println("OfficePanel: loadDocument(3): closing currently open document...");
 					document.close();
 				}
 
 				if (officeFrame == null || buildAlwaysNewFrames) {
-					System.out
-							.println("OfficePanel: loadDocument: activating new officeFrame...");
+					System.out.println("OfficePanel: loadDocument(3): activating new officeFrame...");
 					officeFrame = activateNewFrame();
-					if (officeFrame == null)
-						System.out
-								.println("OfficePanel: WARNING: FAILED: still, officeFrame==null");
-					else
-						System.out.println("OfficePanel: SUCCESS: officeFrame="
-								+ officeFrame.toString());
+					if (officeFrame == null)	System.out.println("OfficePanel: loadDocument(3): WARNING: FAILED: still, officeFrame==null");
+					else						System.out.println("OfficePanel: loadDocument(3): SUCCESS: officeFrame="+ officeFrame.toString());
 				}
 
 				if (!fork) {
-					System.out.println("OfficePanel: fork=false");
+					System.out.println("OfficePanel: loadDocument(3): fork=false");
 
 					IProgressMonitor progressMonitor = getProgressMonitor();
-					if (progressMonitor == null)
-						System.out
-								.println("OfficePanel: progressMonitor==null");
-					else
-						System.out.println("OfficePanel: progressMonitor="
-								+ progressMonitor.toString());
+					if (progressMonitor == null)	System.out.println("OfficePanel: loadDocument(3): progressMonitor==null");
+					else							System.out.println("OfficePanel: loadDocument(3): progressMonitor="+ progressMonitor.toString());
 
 					if (showProgressIndicator)
 						showProgressIndicator();
 
-					System.out
-							.println("OfficePanel: loadDocument: loading document...");
-					if (documentPath == null)
-						System.out.println("OfficePanel: documentPath==null");
-					else
-						System.out.println("OfficePanel: documentPath="
-								+ documentPath.toString());
-					if (documentDescriptor == null)
-						System.out
-								.println("OfficePanel: documentDescriptor==null");
-					else
-						System.out.println("OfficePanel: documentDescriptor="
-								+ documentDescriptor.toString());
-					if (progressMonitor == null)
-						System.out
-								.println("OfficePanel: progressMonitor==null");
-					else
-						System.out.println("OfficePanel: progressMonitor="
-								+ progressMonitor.toString());
+					System.out.println("OfficePanel: loadDocument(3): loading document...");
+					if (documentPath == null)		System.out.println("OfficePanel: loadDocument(3): documentPath==null");
+					else							System.out.println("OfficePanel: loadDocument(3): documentPath="	+ documentPath.toString());
+					if (documentDescriptor == null)	System.out.println("OfficePanel: loadDocument(3): documentDescriptor==null");
+					else							System.out.println("OfficePanel: loadDocument(3): documentDescriptor=" + documentDescriptor.toString());
+					if (progressMonitor == null)	System.out.println("OfficePanel: loadDocument(3): progressMonitor==null");
+					else							System.out.println("OfficePanel: loadDocument(3): progressMonitor=" + progressMonitor.toString());
 
 					loadDocument(documentPath, documentDescriptor,
 							progressMonitor);
@@ -388,19 +365,16 @@ public class OfficePanel extends Composite {
 					if (document != null)
 						lastLoadingStatus = Status.OK_STATUS;
 
-					if (document == null)
-						System.out
-								.println("OfficePanel: WARNING: FAILED: document==null");
-					else
-						System.out.println("OfficePanel: SUCCESS: document="
-								+ document.toString());
+					if (document == null)			System.out.println("OfficePanel: loadDocument(3): WARNING: FAILED: document==null");
+					else							System.out.println("OfficePanel: loadDocument(3): SUCCESS: document=" + document.toString());
 
 					if (showProgressIndicator) {
 						hideProgressIndicator();
 						showOfficeFrame();
 					}
+					
 				} else {
-					System.out.println("OfficePanel: fork=true");
+					System.out.println("OfficePanel: loadDocument(3): fork=true");
 
 					final Display display = Display.getCurrent();
 					loadingThread = new Thread() {
@@ -453,31 +427,17 @@ public class OfficePanel extends Composite {
 			}
 		}
 
-		System.out
-				.println("OfficePanel: loadDocument: Status after doing the work:");
-		if (documentPath == null)
-			System.out.println("OfficePanel: documentPath==null");
-		else
-			System.out.println("OfficePanel: documentPath=" + documentPath);
-		if (currentDocumentPath == null)
-			System.out.println("OfficePanel: currentDocumentPath==null");
-		else
-			System.out.println("OfficePanel: currentDocumentPath="
-					+ currentDocumentPath);
-		if (document == null)
-			System.out.println("OfficePanel: document==null");
-		else
-			System.out.println("OfficePanel: document=" + document.toString());
-		if (officeFrame == null)
-			System.out.println("OfficePanel: officeFrame==null");
-		else
-			System.out.println("OfficePanel: officeFrame="
-					+ officeFrame.toString());
-		if (lastLoadingStatus == null)
-			System.out.println("OfficePanel: lastLoadingStatus==null");
-		else
-			System.out.println("OfficePanel: lastLoadingStatus="
-					+ lastLoadingStatus.toString());
+		System.out.println("OfficePanel: loadDocument(3): Status after doing the work:");
+		if (documentPath == null)			System.out.println("OfficePanel: loadDocument(3): documentPath==null");
+		else								System.out.println("OfficePanel: loadDocument(3): documentPath=" + documentPath);
+		if (currentDocumentPath == null)	System.out.println("OfficePanel: loadDocument(3): currentDocumentPath==null");
+		else								System.out.println("OfficePanel: loadDocument(3): currentDocumentPath=" + currentDocumentPath);
+		if (document == null)				System.out.println("OfficePanel: loadDocument(3): document==null");
+		else								System.out.println("OfficePanel: loadDocument(3): document=" + document.toString());
+		if (officeFrame == null)			System.out.println("OfficePanel: loadDocument(3): officeFrame==null");
+		else								System.out.println("OfficePanel: loadDocument(3): officeFrame=" + officeFrame.toString());
+		if (lastLoadingStatus == null)		System.out.println("OfficePanel: loadDocument(3): lastLoadingStatus==null");
+		else								System.out.println("OfficePanel: loadDocument(3): lastLoadingStatus=" + lastLoadingStatus.toString());
 
 	}
 
@@ -545,7 +505,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	public void setLayout(Layout layout) {
-		System.out.println("OfficePanel: setLayout, default: nop");
+		System.out.println("OfficePanel: setLayout(layout) - default action is to do nothing");
 		// default is to do nothing
 	}
 
@@ -562,8 +522,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	protected void documentLoadingOperationDone() {
-		System.out
-				.println("OfficePanel: documentLoadingOperationDone, default: nop");
+		System.out.println("OfficePanel: documentLoadingOperationDone() - default action is to do nothing");
 		// default is to do nothing
 	}
 
@@ -581,7 +540,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	protected IProgressMonitor getProgressMonitor() {
-		System.out.println("OfficePanel: getProgressMonitor");
+		System.out.println("OfficePanel: getProgressMonitor()");
 		if (progressMonitorPart != null)
 			return progressMonitorPart;
 		return new NullProgressMonitor();
@@ -605,18 +564,13 @@ public class OfficePanel extends Composite {
 	protected IStatus startOfficeApplication(
 			IOfficeApplication officeApplication) {
 		
-		System.out.println("OfficePanel: StartOfficeApplication");
+		System.out.println("OfficePanel: StartOfficeApplication(officeApplication)");
 		
-		if (officeApplication == null)
-			System.out.println("OfficePanel: WARNING: officeApplication==null");
-		else 
-			System.out.println("OfficePanel: Please note: officeApplication="+officeApplication.toString());
+		if (officeApplication == null)	System.out.println("OfficePanel: StartOfficeApplication(1): WARNING: officeApplication==null");
+		else 							System.out.println("OfficePanel: StartOfficeApplication(1): officeApplication="+officeApplication.toString());
 		
-		if (getShell() == null)
-			System.out.println("OfficePanel: WARNING: getShell()==null");
-		else 
-			System.out.println("OfficePanel: Please note: getShell()="+getShell().toString());
-		
+		if (getShell() == null)			System.out.println("OfficePanel: StartOfficeApplication(1): WARNING: getShell()==null");
+		else 							System.out.println("OfficePanel: StartOfficeApplication(1): getShell()="+getShell().toString());
 		
 		return NOAUIPlugin.startLocalOfficeApplication(getShell(),officeApplication);
 	}
@@ -636,7 +590,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	protected void buildProgressIndicator(Composite parent) {
-		System.out.println("OfficePanel: buildProgressIndicator");
+		System.out.println("OfficePanel: buildProgressIndicator()");
 		progressComposite = new Composite(parent, SWT.EMBEDDED);
 		progressComposite.setBackground(Display.getCurrent().getSystemColor(
 				SWT.COLOR_DARK_GRAY));
@@ -682,7 +636,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	protected void showProgressIndicator() {
-		System.out.println("OfficePanel: showProgressIndicator");
+		System.out.println("OfficePanel: showProgressIndicator()");
 		if (progressComposite == null)
 			buildProgressIndicator(baseComposite);
 		stackLayout.topControl = progressComposite;
@@ -701,7 +655,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	protected void hideProgressIndicator() {
-		System.out.println("OfficePanel: hideProgressIndicator, default: nop");
+		System.out.println("OfficePanel: hideProgressIndicator() - default action is to do nothing");
 		// default is to do nothing
 	}
 
@@ -719,7 +673,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	protected final IOfficeApplication getOfficeApplication() {
-		System.out.println("OfficePanel: getOfficeApplication");
+		System.out.println("OfficePanel: getOfficeApplication()");
 		return officeApplication;
 	}
 
@@ -746,28 +700,27 @@ public class OfficePanel extends Composite {
 	private void loadDocument(String documentPath,
 			IDocumentDescriptor documentDescriptor,
 			IProgressMonitor progressMonitor) throws CoreException {
-		System.out.println("OfficePanel: loadDocument begins");
-		if (documentPath == null)
-			System.out.println("OfficePanel: loadDocument: WARNING: documentPath==null");
-		else
-			System.out.println("OfficePanel: loadDocument: documentPath=" + documentPath);
+		
+		System.out.println("OfficePanel: loadDocument(documentPath, documentDescriptor, progressMonitor) begin");
+		if (documentPath == null)	System.out.println("OfficePanel: loadDocument(3): WARNING: documentPath==null");
+		else						System.out.println("OfficePanel: loadDocument(3): documentPath=" + documentPath);
 
 		URL url = convertToURL(documentPath);
-		System.out.println("OfficePanel: loadDocument: url=" + url.toString());
+		System.out.println("OfficePanel: loadDocument(3): url=" + url.toString());
 		try {
-			System.out.println("OfficePanel: loadDocument: trying to allocate new LoadDocumentOperation()...");
+			System.out.println("OfficePanel: loadDocumen(3)t: trying to allocate new LoadDocumentOperation()...");
 			LoadDocumentOperation loadDocumentOperation = new LoadDocumentOperation(
 					null, getOfficeApplication(), officeFrame, url,
 					documentDescriptor);
-			if (loadDocumentOperation==null)	System.out.println("OfficePanel: loadDocument: WARNING: loadDocumentOperation==null");
-			else								System.out.println("OfficePanel: loadDocument: SUCCESS: loadDocumentOperation= "+loadDocumentOperation.toString());
+			if (loadDocumentOperation==null)	System.out.println("OfficePanel: loadDocument(3): WARNING: loadDocumentOperation==null");
+			else								System.out.println("OfficePanel: loadDocument(3): SUCCESS: loadDocumentOperation= "+loadDocumentOperation.toString());
 			
-			System.out.println("OfficePanel: loadDocument: trying loadDocumentOperation.run(progressMonitor)...");
+			System.out.println("OfficePanel: loadDocument(3): trying loadDocumentOperation.run(progressMonitor)...");
 			loadDocumentOperation.run(progressMonitor);
-			System.out.println("OfficePanel: loadDocument: trying document=loadDocumentOperation.getDocument()...");
+			System.out.println("OfficePanel: loadDocument(3): trying document=loadDocumentOperation.getDocument()...");
 			document = loadDocumentOperation.getDocument();
 		} catch (InvocationTargetException invocationTargetException) {
-			System.out.println("OfficePanel: loadDocument: FAILURE: caught InvocationTargetException during loadDocumentOperation");
+			System.out.println("OfficePanel: loadDocument(3): FAILURE: caught InvocationTargetException during loadDocumentOperation");
 			documentLoadingOperationDone();
 			throw new CoreException(new Status(IStatus.ERROR,
 					NOAUIPlugin.PLUGIN_ID, IStatus.ERROR,
@@ -775,11 +728,12 @@ public class OfficePanel extends Composite {
 					invocationTargetException.getCause()));
 		} catch (InterruptedException interruptedException) {
 			// the operation was aborted
-			System.out.println("OfficePanel: loadDocument: FAILURE: caught InterruptedException during loadDocumentOperation");
+			System.out.println("OfficePanel: loadDocument(3): FAILURE: caught InterruptedException during loadDocumentOperation");
 		}
-		System.out.println("OfficePanel: loadDocument: loadDocumentOperationDone()...");
+		
+		System.out.println("OfficePanel: loadDocument(3): loadDocumentOperationDone()...");
 		documentLoadingOperationDone();
-		System.out.println("OfficePanel: loadDocument ends");
+		System.out.println("OfficePanel: loadDocument(3) end");
 	}
 
 	// ----------------------------------------------------------------------------
@@ -793,18 +747,18 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	private void showOfficeFrame() {
-		System.out.println("OfficePanel: showOfficeFrame: begin");
+		System.out.println("OfficePanel: showOfficeFrame(): begin");
 		
-		System.out.println("OfficePanel: showOfficeFrame: baseComposite.isDisposed()="+baseComposite.isDisposed());
-		if (officeComposite==null)	System.out.println("OfficePanel: showOfficeFrame: WARNING: officeComposite==null");
-		else						System.out.println("OfficePanel: showOfficeFrame: officeComposite="+officeComposite.toString());
+		System.out.println("OfficePanel: showOfficeFrame(): baseComposite.isDisposed()="+baseComposite.isDisposed());
+		if (officeComposite==null)	System.out.println("OfficePanel: showOfficeFrame(): WARNING: officeComposite==null");
+		else						System.out.println("OfficePanel: showOfficeFrame(): officeComposite="+officeComposite.toString());
 		
 		if (!baseComposite.isDisposed()) {
 			stackLayout.topControl = officeComposite;
 			baseComposite.layout();
 			officeComposite.layout();
 			
-		System.out.println("OfficePanel: showOfficeFrame: end");
+		System.out.println("OfficePanel: showOfficeFrame(): end");
 		}
 	}
 
@@ -819,7 +773,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	private void buildControls() {
-		System.out.println("OfficePanel: buildControls");
+		System.out.println("OfficePanel: buildControls()");
 		super.setLayout(new GridLayout());
 		baseComposite = new Composite(this, SWT.EMBEDDED);
 		baseComposite
@@ -850,7 +804,7 @@ public class OfficePanel extends Composite {
 	 * @date 28.06.2006
 	 */
 	private IFrame activateNewFrame() throws CoreException {
-		System.out.println("OfficePanel: activateNewFrame");
+		System.out.println("OfficePanel: activateNewFrame()");
 
 		Control oldOfficeComposite = stackLayout.topControl;
 		Frame oldOfficeAWTFrame = officeAWTFrame;
@@ -860,7 +814,7 @@ public class OfficePanel extends Composite {
 		officeComposite.setLayout(new GridLayout());
 
 		try {
-			System.out.println("OfficePanel: activateNewFrame: Trying...");
+			System.out.println("OfficePanel: activateNewFrame(): Trying...");
 
 			officeAWTFrame = SWT_AWT.new_Frame(officeComposite);
 			officeAWTFrame.setVisible(true);
@@ -871,22 +825,22 @@ public class OfficePanel extends Composite {
 			officeAWTFrame.add(officeAWTPanel);
 
 			if (!getOfficeApplication().isActive()) {
-				System.out.println("OfficePanel: activateNewFrame: !getOfficeApplication().isActive()...");
-				System.out.println("OfficePanel: activateNewFrame: startOfficeApplication(getOfficeApplication)...");
+				System.out.println("OfficePanel: activateNewFrame(): !getOfficeApplication().isActive()...");
+				System.out.println("OfficePanel: activateNewFrame(): startOfficeApplication(getOfficeApplication)...");
 								
 				IStatus status = startOfficeApplication(getOfficeApplication());
 
-				if (status==null)	System.out.println("OfficePanel: activateNewFrame: resulting status==null");
-				else				System.out.println("OfficePanel: activateNewFrame: resulting status="+status.toString());
+				if (status==null)	System.out.println("OfficePanel: activateNewFrame(): resulting status==null");
+				else				System.out.println("OfficePanel: activateNewFrame(): resulting status="+status.toString());
 
 				if (status.getSeverity() == IStatus.ERROR) {
-					System.out.println("OfficePanel: activateNewFrame: WARNING: status.getSeverity()==IStatus.ERROR");
+					System.out.println("OfficePanel: activateNewFrame(): WARNING: status.getSeverity()==IStatus.ERROR");
 					throw new CoreException(status);
 				}
 			}
 
 			if (isDisposed()) {
-				System.out.println("OfficePanel: activateNewFrame: isDisposed() ... throwing");
+				System.out.println("OfficePanel: activateNewFrame(): isDisposed() ... throwing");
 				
 				throw new CoreException(new Status(IStatus.ERROR,
 						NOAUIPlugin.PLUGIN_ID, IStatus.ERROR,
@@ -904,18 +858,13 @@ public class OfficePanel extends Composite {
 			stackLayout.topControl = officeComposite;
 			baseComposite.layout();
 
-			if (newOfficeFrame == null)
-				System.out
-						.println("OfficePanel: activateNewFrame: WARNING: Returning newOfficeFrame==null");
-			else
-				System.out
-						.println("OfficePanel: activateNewFrame: Returning newOfficeFrame="
-								+ newOfficeFrame.toString());
+			if (newOfficeFrame == null)		System.out.println("OfficePanel: activateNewFrame(): WARNING: Returning newOfficeFrame==null");
+			else							System.out.println("OfficePanel: activateNewFrame(): Returning newOfficeFrame=" + newOfficeFrame.toString());
 
 			return newOfficeFrame;
 		} catch (Throwable throwable) {
 			System.out
-					.println("OfficePanel: activateNewFrame: CATCHING - SORRY...");
+					.println("OfficePanel: activateNewFrame(): CATCHING - SORRY...");
 			throw new CoreException(new Status(IStatus.ERROR,
 					NOAUIPlugin.PLUGIN_ID, IStatus.ERROR,
 					throwable.getMessage(), throwable));
@@ -953,10 +902,9 @@ public class OfficePanel extends Composite {
 	 */
 	private URL convertToURL(String documentPath) throws CoreException {
 		System.out
-				.println("OfficePanel: convertToURL - modified by js re. Windows part");
-		System.out
-				.println("OfficePanel: convertToURL: TO DO: Please note that the correction-mod may not be necessary any more in noa4e 2.0.14 (js)");
-		System.out.println("OfficePanel: convertToURL: Now trying conversion; if it succeeds, will return immediately thereafter.");
+				.println("OfficePanel: convertToURL(documentPath) - modified by js re. Windows part");
+		System.out.println("OfficePanel: convertToURL(1): TO DO: Please note that the correction-mod may not be necessary any more in noa4e 2.0.14 (js)");
+		System.out.println("OfficePanel: convertToURL(1): Now trying conversion; if it succeeds, will return immediately thereafter.");
 
 		try {
 
@@ -1002,12 +950,31 @@ public class OfficePanel extends Composite {
 			// That could mean that ag.ion have corrected the problem I found in
 			// the meantime as well.
 
+			System.out.println("OfficePanel: convertToURL(1): FRAGE: ****************************************************************************************");
+			System.out.println("OfficePanel: convertToURL(1): FRAGE: Müssen eigentlich wirklich mehrfach im Verlauf mehrere / vorne eingefügt werden?");
+			System.out.println("OfficePanel: convertToURL(1): FRAGE: Die Zahl der führenden (Back)Slashes scheint nämlich hier und später nochmal zu wachsen.");
+			System.out.println("OfficePanel: convertToURL(1): FRAGE: Das mag ohne Auswirkungen bleiben - aber ist es notwendig?");
+			System.out.println("OfficePanel: convertToURL(1): FRAGE: ****************************************************************************************");
+
 			if (OSHelper.IS_WINDOWS) {
+				System.out.println("OfficePanel: convertToURL(1): For "+OSHelper.OS_NAME+": adding file:/// in front of documentPath");
+				
 				return new URL("file:///" + documentPath); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			return new URL("file:////" + documentPath); //$NON-NLS-1$
+			System.out.println("OfficePanel: convertToURL(1): For "+OSHelper.OS_NAME+": adding file:// in front of documentPath");
+			//System.out.println("OfficePanel: convertToURL: For "+OSHelper.OS_NAME+": ************************************");
+			//System.out.println("OfficePanel: convertToURL: For "+OSHelper.OS_NAME+": DELIBERATELY ADDING NONSENSE AS WELL");
+			//System.out.println("OfficePanel: convertToURL: For "+OSHelper.OS_NAME+": ************************************");
+			//return new URL("file:////NONSENSE_TO_MAKE_THIS_FAIL" + documentPath); //$NON-NLS-1$
+
+			System.out.println("OfficePanel: convertToURL(1): In Linux scheint das zu funktionieren mit vorangestelltem:   file:////, file:////, file:///, file://");
+			System.out.println("OfficePanel: convertToURL(1): In Linux scheint es aber NICHT zu gehen mit vorangestelltem: file:/");
+			System.out.println("OfficePanel: convertToURL(1): Ursprünglich im Code war für Linux:                          file:////");
+			System.out.println("OfficePanel: convertToURL(1): Dabei bedeutet funktionieren: Nacher gibt's ein document!=null.");
+			
+			return new URL("file://" + documentPath); //$NON-NLS-1$
 		} catch (Throwable throwable) {
-			System.out.println("OfficePanel: convertToURL: FAILURE - catching throwable.");
+			System.out.println("OfficePanel: convertToURL(1): FAILURE - catching throwable.");
 
 			throw new CoreException(new Status(IStatus.ERROR,
 					NOAUIPlugin.PLUGIN_ID, IStatus.ERROR,

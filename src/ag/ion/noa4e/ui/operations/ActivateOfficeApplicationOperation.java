@@ -51,7 +51,7 @@ import ag.ion.noa4e.ui.NOAUIPlugin;
 /**
  * Operation in order to activate OpenOffice.org application.
  * 
- * @author Andreas Bröker
+ * @author Andreas Brï¿½ker
  * @version $Revision: 11742 $
  */
 public class ActivateOfficeApplicationOperation implements IRunnableWithProgress {
@@ -66,7 +66,7 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
   /**
    * Internal thread class in order start the office application.
    * 
-   * @author Andreas Bröker
+   * @author Andreas Brï¿½ker
    */
   private class InternalThread extends Thread {
 
@@ -78,16 +78,36 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
     /**
      * Executes thread logic.
      * 
-     * @author Andreas Bröker
+     * @author Andreas Brï¿½ker
      */
     public void run() {
+       
+
+      System.out.println("ActivateOfficeApplication: trying to run inside ProgressMonitorDialog...");
+  	  if (officeApplication==null)		System.out.println("ActivateOfficeApplication: officeApplication==null");
+      else								System.out.println("ActivateOfficeApplication: officeApplication="+officeApplication.toString());
+  	  if (officeProgressMonitor==null)	System.out.println("ActivateOfficeApplication: officeProgressMonitor==null");
+      else								System.out.println("ActivateOfficeApplication: officeProgressMonitor="+officeProgressMonitor.toString());
+
+        
       try {
+        System.out.println("ActivateOfficeApplication: run inside ProgressMonitorDialog: officeApplication.activate() trying:");
+
         officeApplication.activate(officeProgressMonitor);
         done = true;
+
+        System.out.println("ActivateOfficeApplication: run inside ProgressMonitorDialog: officeApplication.activate() done.");
       }
       catch (OfficeApplicationException officeApplicationException) {
         this.officeApplicationException = officeApplicationException;
+
+        System.out.println("ActivateOfficeApplication: WARNING: Caught OfficeApplicationException:");
+    	if (this.officeApplicationException==null)	System.out.println("this.officeApplicationException==null");
+        else										System.out.println("this.officeApplicationException="+this.officeApplicationException.toString());
+
       }
+
+      System.out.println("ActivateOfficeApplication: run inside ProgressMonitorDialog: end");
     }
 
     //----------------------------------------------------------------------------
@@ -98,7 +118,7 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
      * @return OfficeApplicationException - returns null if
      * no exception was thrown
      * 
-     * @author Andreas Bröker
+     * @author Andreas Brï¿½ker
      */
     public OfficeApplicationException getOfficeApplicationException() {
       return officeApplicationException;
@@ -112,7 +132,7 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
      * @return information whether the thread has finished his
      * work
      * 
-     * @author Andreas Bröker
+     * @author Andreas Brï¿½ker
      */
     public boolean done() {
       if (officeApplicationException != null)
@@ -130,7 +150,7 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
    * 
    * @param officeApplication office application to be started
    * 
-   * @author Andreas Bröker
+   * @author Andreas Brï¿½ker
    */
   public ActivateOfficeApplicationOperation(IOfficeApplication officeApplication) {
     assert officeApplication != null;
@@ -145,7 +165,7 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
    * @return OfficeApplicationException - returns null if
    * no exception was thrown
    * 
-   * @author Andreas Bröker
+   * @author Andreas Brï¿½ker
    */
   public OfficeApplicationException getOfficeApplicationException() {
     return internalThread.getOfficeApplicationException();
@@ -169,7 +189,7 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
    *  using <code>IProgressMonitor.isCanceled()</code>, it should exit by throwing 
    *  <code>InterruptedException</code>
    * 
-   * @author Andreas Bröker
+   * @author Andreas Brï¿½ker
    */
   public void run(IProgressMonitor progressMonitor) throws InvocationTargetException,
       InterruptedException {
@@ -178,7 +198,16 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
      * jawt itself. The class SWT_AWT uses this native library too. Therefore code from SWT_AWT is used
      * to load the library.
      */
-    if (OSHelper.IS_WINDOWS) { //$NON-NLS-1$
+
+	  System.out.println("ActivateOfficeApplication.TrickyWorkaround(progressMonitor): begin");
+      System.out.println("ActivateOfficeApplication: OSHelper.OS_NAME =    "+OSHelper.OS_NAME);
+      System.out.println("ActivateOfficeApplication: OSHelper.IS_WINDOWS = "+OSHelper.IS_WINDOWS);
+      System.out.println("ActivateOfficeApplication: OSHelper.IS_LINUX =   "+OSHelper.IS_LINUX);
+      System.out.println("ActivateOfficeApplication: OSHelper.IS_MAC =     "+OSHelper.IS_MAC);
+      
+      //2013012190110js: Tested: Trying to use this workaround for Linux as well: No improvement.
+      
+      if (OSHelper.IS_WINDOWS) { //$NON-NLS-1$
       try {
         SWT_AWT.new_Shell(NOAUIPlugin.getDefault().getWorkbench().getDisplay(),
             new java.awt.Canvas());
@@ -186,9 +215,14 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
       catch (Throwable throwable) {
         //do nothing
       }
+	
+      System.out.println("ActivateOfficeApplication.TrickyWorkaround(progressMonitor): end");
+
     }
 
-    internalThread = new InternalThread();
+	System.out.println("ActivateOfficeApplication: about to start internal thread...");
+
+	internalThread = new InternalThread();
     officeProgressMonitor = new OfficeProgressMonitor(progressMonitor);
     internalThread.start();
     while (!internalThread.done()) {
@@ -199,6 +233,8 @@ public class ActivateOfficeApplicationOperation implements IRunnableWithProgress
 
     if (progressMonitor.isCanceled())
       throw new InterruptedException(Messages.ActivateOfficeApplicationOperation_exception_message_interrupted);
+
+    System.out.println("ActivateOfficeApplication: about to end");
 
     progressMonitor.done();
   }

@@ -16,6 +16,5 @@
 	<classpathentry exported="true" kind="lib" path="lib/ridl.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/sandbox.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/unoil.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/bootstrapconnector.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

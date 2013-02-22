@@ -45,6 +45,7 @@ import java.awt.Graphics;
 import java.io.File;
 
 import ag.ion.bion.officelayer.application.IOfficeApplication;
+import java.lang.reflect.Field;
 
 /**
  * Class to pass the system window handle to the OpenOffice.org toolkit.
@@ -54,10 +55,10 @@ import ag.ion.bion.officelayer.application.IOfficeApplication;
  * Use JNI functions on already visible canvas objects only!
  * Otherwise they can make some trouble.
  * 
- * Integrated into NOA by Markus Krueger as it is needed for integration in Swing applications.
+ * Integrated into NOA by Markus Krüger as it is needed for integration in Swing applications.
  *
  * @author  Andreas Schl&uuml;ns
- * @author Markus Krueger
+ * @author Markus Krüger
  * @created 22.02.2002 08:47
  */
 public class NativeView extends Canvas {
@@ -206,7 +207,7 @@ public class NativeView extends Canvas {
 
   //----------------------------------------------------------------------------
   /**
-   * for using of the JNI methods it's neccessary to load
+   * for using of the JNI methods it's necessary to load
    * system library which exports it.
    */
   private void loadLibrary() {
@@ -214,10 +215,7 @@ public class NativeView extends Canvas {
     if (libPathFromProps != null) {
       libPath = libPathFromProps;
     }
-    if (libPath == null) {
-      System.loadLibrary("nativeview");
-    }
-    else {
+    if (libPath != null) {
       String libName = "libnativeview.so";
       String folder64bit = "64bit";
       if (OSHelper.IS_WINDOWS) {
@@ -225,16 +223,20 @@ public class NativeView extends Canvas {
       }
       boolean is64Bit = Integer.valueOf(System.getProperties().getProperty("sun.arch.data.model")) == 64;
       if (is64Bit) {
-        if (new File(libPath + "/"
-            + folder64bit
-            + "/"
-            + libName).exists()) {
-          libPath = libPath + "/"
-              + folder64bit;
+        if (new File(libPath + File.separator + folder64bit + File.separator + libName).exists()) {
+          libPath = libPath + File.separator + folder64bit;
         }
       }
-      System.load(libPath + "/"
-          + libName);
+      System.load(libPath + File.separator + libName);
+    }else if(OSHelper.IS_LINUX || OSHelper.IS_MAC){
+      String libName = "libnativeview.so";
+      boolean is64Bit = Integer.valueOf(System.getProperties().getProperty("sun.arch.data.model")) == 64;
+      libPath = "/usr/lib" + (is64Bit?"64":"");
+
+      System.load(libPath + File.separator + libName);
+    }else{
+        //not giving up yet
+        System.loadLibrary("nativeview");
     }
   }
   //----------------------------------------------------------------------------

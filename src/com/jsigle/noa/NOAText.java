@@ -325,11 +325,33 @@ public class NOAText implements ITextPlugin {
 	 * use a slightly adapted OfficePanel from NOA4e (www.ubion.org)
 	 */
 	public Composite createContainer(final Composite parent, final ICallback handler){
-		System.out.println("NOAText: createContainer");
+		System.out.println("NOAText: createContainer(parent, handler) begin");
+		
+		System.out.println("NOAText: createContainer(): about to new Frame() - WARNING: I CANNOT SEE WHERE THIS IS STORED?");
 		new Frame();
+		
+		System.out.println("NOAText: createContainer(): about to panel = new(OfficePanel(parent, SWT.NONE)");
 		panel = new OfficePanel(parent, SWT.NONE);
 		panel.setBuildAlwaysNewFrames(false);
+		
+        if (panel==null)		{
+        						System.out.println("NOAText: createContainer(): WARNING: panel==null");
+        						System.out.println("NOAText: createContainer(): WARNING: panel.getFrame() consequently undefined");
+        				        }
+        else					{
+        						System.out.println("NOAText: createContainer(): panel="+panel.toString());
+        				        if (panel.getFrame()==null)	System.out.println("NOAText: createContainer(): WARNING: panel.getFrame()==null");
+        				        else						System.out.println("NOAText: createContainer(): panel.getFrame()="+panel.getFrame().toString());
+        }
+        
+        System.out.println("NOAText: createContainer(): about to office = EditorCorePlugin.getDefault().getManagedLocalOfficeApplication();");
 		office = EditorCorePlugin.getDefault().getManagedLocalOfficeApplication();
+
+		if (office==null)	System.out.println("NOAText: createContainer(): WARNING: office==null");
+        else				System.out.println("NOAText: createContainer(): office="+office.toString());
+		
+		System.out.println("NOAText: createContainer(): about return panel");
+		
 		return panel;
 	}
 	
@@ -339,18 +361,40 @@ public class NOAText implements ITextPlugin {
 	 * contents.
 	 */
 	public boolean createEmptyDocument(){
-		System.out.println("NOAText: createEmptyDocument");
+		System.out.println("NOAText: createEmptyDocument() begin");
 		try {
 			clean();
-			Bundle bundle = Platform.getBundle("ch.elexis.noatext");
+
+			//20130221js: obsolete code from old plugin version: Bundle bundle = Platform.getBundle("ch.elexis.noatext");
+			//Also see src/ag/ion/bion/workbench/office/editor/core/EditorCorePlugin.java where this string is also hardcoded.
+			System.out.println("NOAText: createEmptyDocument(): about to get bundle=Platfrom.getBundle(\"com.jsigle.noatext_jsl\")");
+			Bundle bundle = Platform.getBundle("com.jsigle.noatext_jsl");
+
+			if (bundle==null) 	{	System.out.println("NOAText: createEmptyDocument(): ****************************************************");
+									System.out.println("NOAText: createEmptyDocument(): WARNING: bundle==null - probably can't get empty.odt");
+									System.out.println("NOAText: createEmptyDocument(): ****************************************************");
+									System.out.println("NOAText: createEmptyDocument(): WARNING: THE CORRECT PLUGIN NAME MUST BE USED ABOVE!");
+									System.out.println("NOAText: createEmptyDocument(): ****************************************************");
+									}
+			else System.out.println("NOAText: createEmptyDocument(): bundle=="+bundle.toString());
+			
 			Path path = new Path("rsc/empty.odt");
+			
+			System.out.println("NOAText: createEmptyDocument(): Copying internal ressource "+bundle.toString()+" "+path+" to new FileOutputStream...");
+
 			InputStream is = FileLocator.openStream(bundle, path, false);
 			FileOutputStream fos = new FileOutputStream(myFile);
 			FileTool.copyStreams(is, fos);
 			is.close();
 			fos.close();
+
+			System.out.println("NOAText: createEmptyDocument(): about to panel.loadDocument(false, myFile.getAbsolutePath(), DocumentDescriptor.DEFAULT)...");
+
 			panel.loadDocument(false, myFile.getAbsolutePath(), DocumentDescriptor.DEFAULT);
 			createMe();
+			
+			System.out.println("NOAText: createEmptyDocument(): SUCCESS: This probably worked out. Returning true.");
+
 			return true;
 			/*
 			 * doc=(ITextDocument)office.getDocumentService().constructNewDocument(IDocument.WRITER,
@@ -364,6 +408,7 @@ public class NOAText implements ITextPlugin {
 			ExHandler.handle(e);
 			
 		}
+		System.out.println("NOAText: createEmptyDocument(): FAIL: Something probably went wrong. Returning false.");
 		return false;
 	}
 	

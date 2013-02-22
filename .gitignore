@@ -11,6 +11,13 @@
 .svn
 *.svn-base
 #
+# Security risks #
+##################
+passwd
+passwd*
+shadow
+shadow*
+#
 # Compiled source #
 ###################
 *.com

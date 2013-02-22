@@ -41,6 +41,7 @@ package ag.ion.bion.officelayer.internal.event;
 import ag.ion.bion.officelayer.document.IDocument;
 import ag.ion.bion.officelayer.event.IDocumentEvent;
 import ag.ion.bion.officelayer.internal.document.DocumentLoader;
+import ag.ion.noa.service.IServiceProvider;
 
 import com.sun.star.document.EventObject;
 import com.sun.star.lang.XComponent;
@@ -49,7 +50,7 @@ import com.sun.star.uno.UnoRuntime;
 /**
  * Document event.
  * 
- * @author Andreas Brueker
+ * @author Andreas Bröker
  * @version $Revision: 11637 $
  */
 public class DocumentEvent extends Event implements IDocumentEvent {
@@ -59,13 +60,15 @@ public class DocumentEvent extends Event implements IDocumentEvent {
    * Constructs new DocumentEvent.
    * 
    * @param eventOject OpenOffice.org EventObject to be used
+   * @param serviceProvider the service provider to be used
    * 
    * @throws IllegalArgumentException if the submitted OpenOffice.org event object is not valid
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
-  public DocumentEvent(EventObject eventOject) throws IllegalArgumentException {
-    super(eventOject);
+  public DocumentEvent(EventObject eventOject, IServiceProvider serviceProvider)
+      throws IllegalArgumentException {
+    super(eventOject, serviceProvider);
   }
 
   //----------------------------------------------------------------------------
@@ -74,12 +77,12 @@ public class DocumentEvent extends Event implements IDocumentEvent {
    * 
    * @return the document of the event
    * 
-   * @author Markus Krueger
+   * @author Markus Krüger
    */
   public IDocument getDocument() {
     Object object = getSourceObject();
     XComponent xComponent = (XComponent) UnoRuntime.queryInterface(XComponent.class, object);
-    return DocumentLoader.getDocument(xComponent, null, null);
+    return DocumentLoader.getDocument(xComponent, getServiceProvider(), null);
   }
   //---------------------------------------------------------------------------- 
 }

@@ -39,6 +39,7 @@
 package ag.ion.bion.officelayer.internal.event;
 
 import ag.ion.bion.officelayer.event.ICloseListener;
+import ag.ion.noa.service.IServiceProvider;
 
 import com.sun.star.lang.EventObject;
 
@@ -48,7 +49,7 @@ import com.sun.star.util.XCloseListener;
 /**
  * Wrapper in order to register a close listener in OpenOffice.org.
  * 
- * @author Andreas Brueker
+ * @author Andreas Bröker
  * @version $Revision: 10398 $
  */
 public class CloseListenerWrapper extends EventListenerWrapper implements XCloseListener {
@@ -60,15 +61,18 @@ public class CloseListenerWrapper extends EventListenerWrapper implements XClose
    * Constructs new CloseListenerWrapper.
    * 
    * @param closeListener close listener to be wrapped
+   * @param serviceProvider the service provider to be used
    *  
    * @throws IllegalArgumentException if the submitted close listener is not valid
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
-  public CloseListenerWrapper(ICloseListener closeListener) throws IllegalArgumentException {
-    super(closeListener);
-    this.closeListener = closeListener;    
-  }  
+  public CloseListenerWrapper(ICloseListener closeListener, IServiceProvider serviceProvider)
+      throws IllegalArgumentException {
+    super(closeListener, serviceProvider);
+    this.closeListener = closeListener;
+  }
+
   //----------------------------------------------------------------------------
   /**
    * Is called when somewhere tries to close listened object.
@@ -78,11 +82,11 @@ public class CloseListenerWrapper extends EventListenerWrapper implements XClose
    * 
    * @throws CloseVetoException close veto exception
    * 
-   * @author Andreas Brueker
-   */ 
-  public void queryClosing(EventObject eventObject, boolean getsOwnership) 
-    throws CloseVetoException {  
-    CloseEvent closeEvent = new CloseEvent(eventObject);
+   * @author Andreas Bröker
+   */
+  public void queryClosing(EventObject eventObject, boolean getsOwnership)
+      throws CloseVetoException {
+    CloseEvent closeEvent = new CloseEvent(eventObject, getServiceProvider());
     closeListener.queryClosing(closeEvent, getsOwnership);
     if(closeEvent.getVeto())
       throw new CloseVetoException();    
@@ -93,10 +97,10 @@ public class CloseListenerWrapper extends EventListenerWrapper implements XClose
    * 
    * @param eventObject event object
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
-  public void notifyClosing(EventObject eventObject) { 
-    closeListener.notifyClosing(new CloseEvent(eventObject));
+  public void notifyClosing(EventObject eventObject) {
+    closeListener.notifyClosing(new CloseEvent(eventObject, getServiceProvider()));
   }
   //----------------------------------------------------------------------------
   

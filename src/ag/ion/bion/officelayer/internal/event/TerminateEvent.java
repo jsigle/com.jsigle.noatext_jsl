@@ -39,13 +39,14 @@
 package ag.ion.bion.officelayer.internal.event;
 
 import ag.ion.bion.officelayer.event.ITerminateEvent;
+import ag.ion.noa.service.IServiceProvider;
 
 import com.sun.star.lang.EventObject;
 
 /**
  * Terminate event.
  * 
- * @author Andreas Brueker 
+ * @author Andreas Bröker 
  * @version $Revision: 10398 $
  */
 public class TerminateEvent extends Event implements ITerminateEvent {
@@ -57,13 +58,15 @@ public class TerminateEvent extends Event implements ITerminateEvent {
    * Constructs new TerminateEvent.
    * 
    * @param eventOject OpenOffice.org EventObject to be used
+   * @param serviceProvider the service provider to be used
    * 
    * @throws IllegalArgumentException if the submitted OpenOffice.org EventObject
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
-  public TerminateEvent(EventObject eventOject) throws IllegalArgumentException {
-    super(eventOject);    
+  public TerminateEvent(EventObject eventOject, IServiceProvider serviceProvider)
+      throws IllegalArgumentException {
+    super(eventOject, serviceProvider);
   }
   //----------------------------------------------------------------------------
   /**
@@ -71,7 +74,7 @@ public class TerminateEvent extends Event implements ITerminateEvent {
    * 
    * @param veto veto information
    * 
-   * @author Andreas Brueker 
+   * @author Andreas Bröker 
    */
   public void setVeto(boolean veto) {
     this.veto = veto;
@@ -82,7 +85,7 @@ public class TerminateEvent extends Event implements ITerminateEvent {
    * 
    * @return information whether the terminate event should be stopped
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public boolean getVeto() {
     return veto;

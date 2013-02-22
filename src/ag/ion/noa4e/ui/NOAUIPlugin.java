@@ -267,20 +267,19 @@ public class NOAUIPlugin extends AbstractUIPlugin {
   public static IStatus startLocalOfficeApplication(Shell shell,
       IOfficeApplication officeApplication) {
 
-	  
-	System.out.println("NOAUIPlugin: startLocalOfficeApplication()...");
+	System.out.println("NOAUIPlugin: startLocalOfficeApplication(Shell, officeApplication) begin");
 	  
 	while (true) {
-	  System.out.println("NOAUIPlugin: startLocalOfficeApplication(): while (true) trying to start...");
+	  System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): while (true) trying to start...");
 		
 	  IStatus status = internalStartApplication(shell, officeApplication);
 	  
-	  System.out.println("NOAUIPlugin: startLocalOfficeApplication(): returned from trying to start.");
-	  if (status==null)	System.out.println("NOAUIPlugin: startLocalOfficeApplication(): status==null");
-	  else				System.out.println("NOAUIPlugin: startLocalOfficeApplication(): status="+status.toString());
+	  System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): returned from trying to start.");
+	  if (status==null)	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): status==null");
+	  else				System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): status="+status.toString());
 		
 	  if (status.getSeverity() == IStatus.ERROR) {  
-    	System.out.println("NOAUIPlugin: startLocalOfficeApplication(): WARNING: status.getSeverity()==IStatus.ERROR");
+    	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): WARNING: status.getSeverity()==IStatus.ERROR");
   		
         if (MessageDialog.openQuestion(shell,
             Messages.NOAUIPlugin_dialog_change_preferences_title,
@@ -295,14 +294,14 @@ public class NOAUIPlugin extends AbstractUIPlugin {
             continue;
         }
       }
-	  else System.out.println("NOAUIPlugin: startLocalOfficeApplication(): SUCCESS: !status.getSeverity()==IStatus.ERROR"); 
+	  else System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): SUCCESS: !status.getSeverity()==IStatus.ERROR"); 
 	  
 	  
       try {
      	//My warning in the following line referred to the original noa4e code:
-    	//System.out.println("NOAUIPlugin: internalStartApplication(): getting officeHome (WARNING: probably from the wrong source)...");
-    	System.out.println("NOAUIPlugin: internalStartApplication(): getting officeHome...");
-    	System.out.println("NOAUIPlugin: Using js mod adopted for Elexis, reproducing prior GW adoptions, P_OOBASEDIR via ...(Hub.localCfg)");
+    	//System.out.println("NOAUIPlugin: internalStartApplication(2): getting officeHome (WARNING: probably from the wrong source)...");
+    	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): getting officeHome...");
+    	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): Using js mod adopted for Elexis, reproducing prior GW adoptions, P_OOBASEDIR via ...(Hub.localCfg)");
 
     	//JS modified this:
     	//The original code tries to access a preference store which is not used in Elexis,
@@ -312,8 +311,11 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     	//Newly inserted lines:
     	IPreferenceStore preferenceStore = new SettingsPreferenceStore(Hub.localCfg);
     	String officeHome = preferenceStore.getString(PreferenceConstants.P_OOBASEDIR);
+    	
+    	if (officeHome==null)	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): WARNING: officeHome==null");
+        else					System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): officeHome="+officeHome);
     	  
-    	System.out.println("NOAUIPlugin: startLocalOfficeApplication(): trying to get preventTermination setting...");
+    	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): trying to get preventTermination setting...");
 
     	//My warning in the following line referred to the original noa4e code:
     	//System.out.println("NOAUIPlugin: WARNING: THIS PROBABLY REFERENCES THE WRONG PREFERENCE STORE. SEE LocalPreferences...GWeirich/JS mods");
@@ -327,19 +329,21 @@ public class NOAUIPlugin extends AbstractUIPlugin {
 	    //Already declared further above: IPreferenceStore preferenceStore = new SettingsPreferenceStore(Hub.localCfg);
     	boolean preventTermination=preferenceStore.getBoolean(PREFS_PREVENT_TERMINATION);
     	
-        System.out.println("NOAUIPlugin: startLocalOfficeApplication(): got preventTermination setting="+preventTermination);
+        System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): got preventTermination setting="+preventTermination);
     	
         if (preventTermination) {
-        	System.out.println("NOAUIPlugin: startLocalOfficeApplication(): trying officeApplication.getDesktopService().activateTerminationPrevention()...");
+        	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): trying officeApplication.getDesktopService().activateTerminationPrevention()...");
         	officeApplication.getDesktopService().activateTerminationPrevention();
-        	System.out.println("NOAUIPlugin: startLocalOfficeApplication(): SUCCESS: officeApplication.getDesktopService().activateTerminationPrevention()");
+        	System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): SUCCESS: officeApplication.getDesktopService().activateTerminationPrevention()");
         }
       }
       catch (OfficeApplicationException officeApplicationException) {
         //no prevention
-    	  System.out.println("NOAUIPlugin: startLocalOfficeApplication(): FAILED: preventTermination could NOT be set.");
+    	  System.out.println("NOAUIPlugin: startLocalOfficeApplication(2): FAILED: preventTermination could NOT be set.");
       	
       }
+
+      System.out.println("NOAUIPlugin: startLocalOfficeApplication(2) end, returning status");
       return status;
     }
   }
@@ -375,14 +379,14 @@ public class NOAUIPlugin extends AbstractUIPlugin {
   private static IStatus internalStartApplication(final Shell shell,
       IOfficeApplication officeApplication) {
 	
-	System.out.println("NOAUIPlugin: internalStartApplication()...");
+	System.out.println("NOAUIPlugin: internalStartApplication() begin");
 	
 	if (officeApplication.isActive()) {
 	  System.out.println("NOAUIPlugin: internalStartApplication(): officeApplication.isActive(), so returning immediately.");
       return Status.OK_STATUS;
 	}
 	
-	System.out.println("NOAUIPlugin: internalStartApplication(): !officeApplication.isActive(), so doing some work.");
+	System.out.println("NOAUIPlugin: internalStartApplication(): !officeApplication.isActive(), so starting it up...");
     
     boolean configurationChanged = false;
     boolean canStart = false;
@@ -394,7 +398,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     //My warning in the following line referred to the original noa4e code:
     //System.out.println("NOAUIPlugin: internalStartApplication(): getting officeHome (WARNING: probably from the wrong source)...");
     System.out.println("NOAUIPlugin: internalStartApplication(): getting officeHome...");
-    System.out.println("NOAUIPlugin: Using js mod adopted for Elexis, reproducing prior GW adoptions, P_OOBASEDIR via ...(Hub.localCfg)");
+    System.out.println("NOAUIPlugin: internalStartApplication(): Using js mod adopted for Elexis, reproducing prior GW adoptions, P_OOBASEDIR via ...(Hub.localCfg)");
 
     //JS modified this:
     //The original code tries to access a preference store which is not used in Elexis,
@@ -405,19 +409,22 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     IPreferenceStore preferenceStore = new SettingsPreferenceStore(Hub.localCfg);
     String officeHome = preferenceStore.getString(PreferenceConstants.P_OOBASEDIR);
    
-    System.out.println("NOAUIPlugin: internalStartApplication(): got officeHome.");
-
     if (officeHome==null)	System.out.println("NOAUIPlugin: internalStartApplication(): WARNING: officeHome==null");
     else					System.out.println("NOAUIPlugin: internalStartApplication(): officeHome="+officeHome);
     
     if (officeHome.length() != 0) {
       File file = new File(officeHome);
       if (file.canRead()) {
-        configuration.put(IOfficeApplication.APPLICATION_HOME_KEY, officeHome);
+    
+    	System.out.println("NOAUIPlugin: internalStartApplication(): Check: officeHome is a valid path. Setting canStart to true.");
+        
+    	configuration.put(IOfficeApplication.APPLICATION_HOME_KEY, officeHome);
         canStart = true;
       }
       else {
-        MessageDialog.openWarning(shell,
+      	System.out.println("NOAUIPlugin: internalStartApplication(): WARNING: officeHome is NOT a valid path. Leaving canStart at false.");
+        
+      	MessageDialog.openWarning(shell,
             Messages.NOAUIPlugin_dialog_warning_invalid_path_title,
             Messages.NOAUIPlugin_dialog_warning_invalid_path_message);
       }
@@ -426,6 +433,8 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     System.out.println("NOAUIPlugin: internalStartApplication(): canStart="+canStart);
 
     if (!canStart) {
+      System.out.println("NOAUIPlugin: internalStartApplication(): canStart==false; trying to auto locate available office suite installations...");
+      
       configurationChanged = true;
       ILazyApplicationInfo[] applicationInfos = null;
       boolean configurationCompleted = false;
@@ -443,6 +452,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
         }
       }
       catch (Throwable throwable) {
+        System.out.println("NOAUIPlugin: internalStartApplication(): canStart==false; cannot auto locate an office suite installation. So we must search manually...");
         //we must search manually
       }
 
@@ -461,19 +471,20 @@ public class NOAUIPlugin extends AbstractUIPlugin {
       }
     }
 
-    System.out.println("NOAUIPlugin: internalStartApplication(): Finally trying activateOfficeApplication()...");
-    if (officeApplication==null)	System.out.println("NOAUIPlugin: officeApplication==null");
-    else							System.out.println("NOAUIPlugin: officeApplication="+officeApplication.toString());
-    if (configuration==null)		System.out.println("NOAUIPlugin: configuration==null");
-    else							System.out.println("NOAUIPlugin: configuration="+configuration.toString());
-    if (shell==null)				System.out.println("NOAUIPlugin: shell==null");
-    else							System.out.println("NOAUIPlugin: shell="+shell.toString());
-
+    System.out.println("NOAUIPlugin: internalStartApplication(): the office suite configuration should now be valid:");
+    if (officeApplication==null)	System.out.println("NOAUIPlugin: internalStartApplication(): officeApplication==null");
+    else							System.out.println("NOAUIPlugin: internalStartApplication(): officeApplication="+officeApplication.toString());
+    if (configuration==null)		System.out.println("NOAUIPlugin: internalStartApplication(): configuration==null");
+    else							System.out.println("NOAUIPlugin: internalStartApplication(): configuration="+configuration.toString());
+    if (shell==null)				System.out.println("NOAUIPlugin: internalStartApplication(): shell==null");
+    else							System.out.println("NOAUIPlugin: internalStartApplication(): shell="+shell.toString());
+    System.out.println("NOAUIPlugin: internalStartApplication(): Finally trying activateOfficeApplication(officeApplication, configuration, shell):");
+    
     IStatus status = activateOfficeApplication(officeApplication, configuration, shell);
     if (configurationChanged) {
         System.out.println("NOAUIPlugin: internalStartApplication(): Configuration of PREFERENCE_OFFICE_HOME changed.");
         System.out.println("NOAUIPlugin: internalStartApplication(): Storing the new configuration.");
-        System.out.println("Using js mod adopted for Elexis, reproducing prior GW adoptions, P_OOBASEDIR via ...(Hub.localCfg)");
+        System.out.println("NOAUIPlugin: internalStartApplication(): Using js mod adopted for Elexis, reproducing prior GW adoptions, P_OOBASEDIR via ...(Hub.localCfg)");
 
     	//JS modified this:
         //The original code tries to access a preference store which is not used in Elexis,
@@ -485,6 +496,7 @@ public class NOAUIPlugin extends AbstractUIPlugin {
         preferenceStore.setValue(PreferenceConstants.P_OOBASEDIR, configuration.get(IOfficeApplication.APPLICATION_HOME_KEY).toString());
     }
       
+    System.out.println("NOAUIPlugin: internalStartApplication() end, returning status");
     return status;
   }
 
@@ -504,6 +516,10 @@ public class NOAUIPlugin extends AbstractUIPlugin {
   private static IStatus activateOfficeApplication(IOfficeApplication officeApplication,
       Map configuration, Shell shell) {
     IStatus status = Status.OK_STATUS;
+    
+    System.out.println("NOAUIPlugin: activateOfficeApplication() begin");
+    System.out.println("NOAUIPlugin: activateOfficeApplication(): trying to getActiveWorkbenchWindow()");
+
     try {
       officeApplication.setConfiguration(configuration);
       boolean useProgressMonitor = true;
@@ -514,16 +530,53 @@ public class NOAUIPlugin extends AbstractUIPlugin {
         IWorkbenchPage workbenchPage = workbenchWindow.getActivePage();
         if (workbenchPage == null)
           useProgressMonitor = false;
+
+        if (workbenchPage==null)		System.out.println("NOAUIPlugin: activateOfficeApplication(): workbenchPage==null");
+        else							System.out.println("NOAUIPlugin: activateOfficeApplication(): workbenchPage="+workbenchPage.toString());
+
       }
+
+      if (workbenchWindow==null)	System.out.println("NOAUIPlugin: activateOfficeApplication(): workbenchWindow==null");
+      else							System.out.println("NOAUIPlugin: activateOfficeApplication(): workbenchWindow="+workbenchWindow.toString());
+      
+      System.out.println("NOAUIPlugin: activateOfficeApplication(): trying to get new ActivateOfficeApplicationOperation()");
+  
       ActivateOfficeApplicationOperation activateOfficeApplicationOperation = new ActivateOfficeApplicationOperation(officeApplication);
+      
+      if (activateOfficeApplicationOperation==null)	System.out.println("NOAUIPlugin: activateOfficeApplication(): activateOfficeApplicationOperation==null");
+      else											System.out.println("NOAUIPlugin: activateOfficeApplication(): activateOfficeApplicationOperation="+activateOfficeApplicationOperation.toString());
+
+      System.out.println("NOAUIPlugin: activateOfficeApplication(): useProgressMonitor="+useProgressMonitor);
+            
       if (useProgressMonitor) {
+        System.out.println("NOAUIPlugin: activateOfficeApplication(): trying to get new ProgressMonitorDialog()");
+
         ProgressMonitorDialog progressMonitorDialog = new ProgressMonitorDialog(shell);
+
+        if (progressMonitorDialog ==null)	System.out.println("NOAUIPlugin: activateOfficeApplication(): progressMonitorDialog==null");
+        else								System.out.println("NOAUIPlugin: activateOfficeApplication(): progressMonitorDialog="+progressMonitorDialog.toString());
+        if (activateOfficeApplicationOperation ==null)	System.out.println("NOAUIPlugin: activateOfficeApplication(): activateOfficeApplicationOperation==null");
+        else								System.out.println("NOAUIPlugin: activateOfficeApplication(): activateOfficeApplicationOperation="+activateOfficeApplicationOperation.toString());
+
+        System.out.println("NOAUIPlugin: activateOfficeApplication(): trying to run ProgressMonitorDialog");
+        
+        //in progressMonitorDialog.run() selbst kann ich offenbar kein Monitoring hineinschreiben,
+        //das gehört zu den eclipse Klassen. Aber vielleicht nach activateOfficeApplicationOperation.
+
         progressMonitorDialog.run(true, true, activateOfficeApplicationOperation);
+
+        System.out.println("NOAUIPlugin: activateOfficeApplication(): ProgressMonitorDialog should now be running...");
       }
       else
         activateOfficeApplicationOperation.run(new NullProgressMonitor());
+
+      System.out.println("NOAUIPlugin: activateOfficeApplication(): check whether exception occured:");
+      
       if (activateOfficeApplicationOperation.getOfficeApplicationException() != null) {
-        status = new Status(IStatus.ERROR,
+
+    	System.out.println("NOAUIPlugin: activateOfficeApplication(): check whether exception occured: YES: so show status in error dialog");
+              	  
+    	status = new Status(IStatus.ERROR,
             PLUGIN_ID,
             IStatus.ERROR,
             activateOfficeApplicationOperation.getOfficeApplicationException().getMessage(),
@@ -533,6 +586,8 @@ public class NOAUIPlugin extends AbstractUIPlugin {
             ERROR_ACTIVATING_APPLICATION,
             status);
       }
+    
+
     }
     catch (InvocationTargetException invocationTargetException) {
       status = new Status(IStatus.ERROR,
@@ -559,6 +614,8 @@ public class NOAUIPlugin extends AbstractUIPlugin {
     catch (InterruptedException interruptedException) {
       return Status.CANCEL_STATUS;
     }
+
+    System.out.println("NOAUIPlugin: activateOfficeApplication() end, returning status");
     return status;
   }
   //----------------------------------------------------------------------------

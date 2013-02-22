@@ -53,7 +53,7 @@ import java.util.Map;
 /**
  * Local OpenOffice.org application.
  * 
- * @author Andreas Brueker
+ * @author Andreas Bröker
  * @version $Revision: 10398 $
  */
 public class LocalOfficeApplication extends AbstractOfficeApplication implements IOfficeApplication {
@@ -61,6 +61,7 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
   private LocalOfficeApplicationConfiguration localOfficeApplicationConfiguration = null;
   
   private String home = null;
+  private String[] arguments = null;
      
   private boolean isConfigured = false;
   
@@ -80,7 +81,7 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
    * 
    * @param map configuration map to be used (can be null)
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public LocalOfficeApplication(Map map) {
     if(map != null) {
@@ -100,7 +101,7 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
    * 
    * @throws OfficeApplicationException if the submitted configuration is not valid
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    * 
    * @deprecated Use setConfiguration(Map configuration) instead.
    */
@@ -122,7 +123,7 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
    * 
    * @throws OfficeApplicationException if the configuration is not complete
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   public void setConfiguration(Map configuration) throws OfficeApplicationException {
     initConfiguration(configuration);
@@ -146,22 +147,45 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
    * 
    * @throws OfficeApplicationException if the connection can not be established
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   protected void openConnection(IOfficeProgressMonitor officeProgressMonitor) throws OfficeApplicationException {
+    System.out.println("AbstractOfficeApplication: openConnection() begin");
+
     try {
+      System.out.println("AbstractOfficeApplication: getting new LocalOfficeConnection()");
+
       LocalOfficeConnection localOfficeConnection = new LocalOfficeConnection();
+
+      if (localOfficeConnection==null)	System.out.println("AbstractOfficeApplication: localOfficeConnection==null");
+      else				System.out.println("AbstractOfficeApplication: localOfficeConnection="+localOfficeConnection.toString());
+      
+      System.out.println("AbstractOfficeApplication: localOfficeConnection.setOfficePath("+home+")");
       localOfficeConnection.setOfficePath(home);
+
+      System.out.println("AbstractOfficeApplication: localOfficeConnection.setOfficeArguments("+arguments+")");
+      localOfficeConnection.setOfficeArguments(arguments);
+
+      System.out.println("AbstractOfficeApplication: localOfficeConnection.setHost(\"localhost\")");
       localOfficeConnection.setHost("localhost");
+
+      System.out.println("AbstractOfficeApplication: localOfficeConnection.setUseBridge(true)");
       localOfficeConnection.setUseBridge(true);
+      
+      System.out.println("AbstractOfficeApplication: localOfficeConnection.openConnection(officeProgressMonitor)");
       localOfficeConnection.openConnection(officeProgressMonitor);
+      
+      System.out.println("AbstractOfficeApplication: setOfficeConnection(localOfficeConnection)");
       setOfficeConnection(localOfficeConnection);
+
+      System.out.println("AbstractOfficeApplication: setOfficeConnection(localOfficeConnection) has returned");
     }
     catch(Throwable throwable) {
       OfficeApplicationException officeApplicationException = new OfficeApplicationException(throwable.getMessage());
       officeApplicationException.initCause(throwable);
       throw officeApplicationException;
     }
+    System.out.println("AbstractOfficeApplication: openConnection() end");
   }
   //----------------------------------------------------------------------------
   /**
@@ -171,7 +195,7 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
    * 
    * @throws OfficeApplicationException if the configuration is not complete
    * 
-   * @author Andreas Brueker
+   * @author Andreas Bröker
    */
   private void initConfiguration(Map configuration) throws OfficeApplicationException {
     if(configuration == null)
@@ -179,6 +203,10 @@ public class LocalOfficeApplication extends AbstractOfficeApplication implements
     Object home = configuration.get(IOfficeApplication.APPLICATION_HOME_KEY);
     if(home != null) {
       this.home = home.toString();      
+    }
+    Object arguments = configuration.get(IOfficeApplication.APPLICATION_ARGUMENTS_KEY);
+    if(arguments != null) {
+      this.arguments = (String[])arguments;      
     }
     isConfigured = true;
     //else
