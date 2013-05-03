@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: OOWrapper updated with noa-libre and improved by Joerg Sigle
 Bundle-SymbolicName: com.jsigle.noatext_jsl;singleton:=true
-Bundle-Version: 1.4.7
+Bundle-Version: 1.4.10
 Bundle-Vendor: jsigle.com
 Bundle-Localization: plugin
 Require-Bundle: ch.elexis,

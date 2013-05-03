@@ -118,7 +118,10 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
 import org.jdom.Document;
 import org.osgi.framework.Bundle;
@@ -143,17 +146,30 @@ import ag.ion.noa.NOAException;
 import ag.ion.noa.search.ISearchResult;
 import ag.ion.noa.search.SearchDescriptor;
 import ag.ion.noa.service.IServiceProvider;
+import ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage;
 import ag.ion.noa4e.ui.widgets.OfficePanel;
+import ch.elexis.Desk;
 import ch.elexis.Hub;
 import com.jsigle.noa.NOAText;
 import com.jsigle.noa.OOPrinter;
-//201206260013
-//import com.jsigle.noa.closeListener;
+
+//import com.jsigle.noa.closeListener;	//201206260013js
+import ch.elexis.actions.ElexisEventDispatcher;
+import ch.elexis.data.Brief;
+import ch.elexis.data.Fall;
+//import ch.elexis.data.Konsultation;	//20130414js: use temporary meaningful filenames - TODO - Remove if not needed any more. Look for configured_temp_filename below.
+import ch.elexis.data.Kontakt;
+import ch.elexis.data.Patient;
+import ch.elexis.dialogs.DocumentSelectDialog;
 import ch.elexis.preferences.PreferenceConstants;
 import ch.elexis.text.ITextPlugin;
 import ch.elexis.text.ReplaceCallback;
 import ch.elexis.util.Log;
 import ch.elexis.util.SWTHelper;
+//import ch.elexis.util.viewers.CommonViewer; //20130414js: use temporary meaningful filenames -  TODO - MaybeNeeded later on. Look for configured_temp_filename below.
+import ch.elexis.views.Messages;
+import ch.elexis.views.TextView;
+//import ch.elexis.views.BriefAuswahl; //20130414js: use temporary meaningful filenames -  TODO - MaybeNeeded later on. Look for configured_temp_filename below.
 import ch.rgw.io.FileTool;
 import ch.rgw.tools.ExHandler;
 import ch.rgw.tools.StringTool;
@@ -274,7 +290,7 @@ public class NOAText implements ITextPlugin {
 	 * We deactivate the office application as the user closes the last office window
 	 */
 	private void removeMe(){
-		System.out.println("NOAText: removeMe");
+		System.out.println("NOAText: removeMe begin");
 		try {
 			System.out.println("NOAText: removeMe: trying 1...");
 				if (textHandler != null) {
@@ -304,19 +320,25 @@ public class NOAText implements ITextPlugin {
 				log.log("Office deactivation failed", Log.ERRORS);
 			}
 		}
+		System.out.println("NOAText: removeMe end");
 	}
 	
 	public boolean clear(){
-		System.out.println("NOAText: clear");
+		System.out.println("NOAText: clear begin");
 		if (textHandler != null) {
 			try {
+				System.out.println("NOAText: clear: textHandler.save()...");
 				textHandler.save();
+				System.out.println("NOAText: clear: doc.setModified(false);");
 				doc.setModified(false);
+				System.out.println("NOAText: clear: return true");
 				return true;
 			} catch (DocumentException e) {
+				System.out.println("NOAText: clear: WARNING: caught Exception");
 				ExHandler.handle(e);
 			}
 		}
+		System.out.println("NOAText: clear: return false");
 		return false;
 	}
 	
@@ -328,9 +350,12 @@ public class NOAText implements ITextPlugin {
 		System.out.println("NOAText: createContainer(parent, handler) begin");
 		
 		System.out.println("NOAText: createContainer(): about to new Frame() - WARNING: I CANNOT SEE WHERE THIS IS STORED?");
-		new Frame();
+		System.out.println("NOAText: createContainer(): about to new Frame() - WARNING: DISABLED FOR DEBUGGING.");
+		System.out.println("NOAText: createContainer(): about to new Frame() - WARNING: Under Linux: No change, if disabled, and also in EditorCorePlugin.java - see workaround over there.");
+		//new Frame();
 		
 		System.out.println("NOAText: createContainer(): about to panel = new(OfficePanel(parent, SWT.NONE)");
+		//Disabling the following statement -> Das Textplugin konnte nicht geladen werden.
 		panel = new OfficePanel(parent, SWT.NONE);
 		panel.setBuildAlwaysNewFrames(false);
 		
@@ -363,6 +388,7 @@ public class NOAText implements ITextPlugin {
 	public boolean createEmptyDocument(){
 		System.out.println("NOAText: createEmptyDocument() begin");
 		try {
+			System.out.println("NOAText: createEmptyDocument(): clean()...");
 			clean();
 
 			//20130221js: obsolete code from old plugin version: Bundle bundle = Platform.getBundle("ch.elexis.noatext");
@@ -394,7 +420,6 @@ public class NOAText implements ITextPlugin {
 			createMe();
 			
 			System.out.println("NOAText: createEmptyDocument(): SUCCESS: This probably worked out. Returning true.");
-
 			return true;
 			/*
 			 * doc=(ITextDocument)office.getDocumentService().constructNewDocument(IDocument.WRITER,
@@ -405,6 +430,7 @@ public class NOAText implements ITextPlugin {
 			 */
 
 		} catch (Exception e) {
+			System.out.println("NOAText: createEmptyDocument(): WARNING: caught Exception");
 			ExHandler.handle(e);
 			
 		}
@@ -852,7 +878,9 @@ public class NOAText implements ITextPlugin {
 	/** retrieves the type of a form component.
 	*/
 	static public int getFormComponentType(XPropertySet xComponent)	{
-		System.out.println("NOAText: getFormComponentType");
+		//This won't work here:
+		//System.out.println("NOAText: getFormComponentType");
+		System.out.println("NOAText: js getFormComponentType begin - log.log() not available here");
 		XPropertySetInfo xPSI = null;
 	    if (null != xComponent)
 	        xPSI = xComponent.getPropertySetInfo();
@@ -868,7 +896,8 @@ public class NOAText implements ITextPlugin {
 				e.printStackTrace();
 			}
 	     }
-	    return 0;
+	    System.out.println("NOAText: js getFormComponentType end - log.log() not available here");
+		return 0;
 		}	
 	
 	public PageFormat getFormat(){
@@ -1167,7 +1196,153 @@ public class NOAText implements ITextPlugin {
 				// doc.close();
 				myFile.delete();
 			}
+
+			//20130414js: use temporary meaningful filenames: I'm adopting the similar mechanism I created for omnivore_js 1.4.4:
+			//If we don't have data to construct a meaningful filename, then fall back to the previously used method of creating a meaningless unique temp filename.
+			System.out.println("NOAText: clean: constructing temp file name...");
+			//TODO: CAVE: Changing the calling conventions for clean() might break compatibility with other text plugins!
+			System.out.println("NOAText: TODO: Code to include Fall related info is already here in NOAText.java; but commented out, because NOAText probably knows too little.");
+						
+			//20130414js: Now, if we have additional data needed to create a meaningful temp filename, do just that.
+			StringBuffer configured_temp_filename=new StringBuffer();
+			System.out.println("NOAText: clean(): configured_temp_filename="+configured_temp_filename.toString());
+			configured_temp_filename.append(LocalOfficeApplicationPreferencesPage.getNOAText_jslTemp_Filename_Element("constant1",""));
+			System.out.println("NOAText: clean(): configured_temp_filename="+configured_temp_filename.toString());
+			
+			//TODO: We might add efficiency to similar code in Omnivore_js DocHandle.java the same way as we do here - read pat once, and only call related routines if pat!=null. 
+
+			//TODO: Please review NOAText.java 1.4.9 addition of patient related data to temporary filename. Make sure that whenever getSelectedPatient() returns not null, the selected patient is valid for the opened/created document.
+			//At the moment, I'm not aware that documents could be opened without any selected patient, and the severity of a temp file being named with an unrelated patient id is probably rather low.
+			//TODO Most easily, we might simply pass the valid patient or even the configured_temp_filename portion to NOAText from whereever it is called while opening a document.
+			Patient pat = ElexisEventDispatcher.getSelectedPatient();
+			if (pat != null) {			
+				configured_temp_filename.append(LocalOfficeApplicationPreferencesPage.getNOAText_jslTemp_Filename_Element("PID",pat.getKuerzel()));	//getPatient() liefert in etwa: ch.elexis.com@1234567; getPatient().getId() eine DB-ID; getPatient().getKuerzel() die Patientennummer.
+				System.out.println("NOAText: clean(): configured_temp_filename="+configured_temp_filename.toString());
+				configured_temp_filename.append(LocalOfficeApplicationPreferencesPage.getNOAText_jslTemp_Filename_Element("fn",pat.getName()));
+				System.out.println("NOAText: clean(): configured_temp_filename="+configured_temp_filename.toString());
+				configured_temp_filename.append(LocalOfficeApplicationPreferencesPage.getNOAText_jslTemp_Filename_Element("gn",pat.getVorname()));
+				System.out.println("NOAText: clean(): configured_temp_filename="+configured_temp_filename.toString());
+				configured_temp_filename.append(LocalOfficeApplicationPreferencesPage.getNOAText_jslTemp_Filename_Element("dob",pat.getGeburtsdatum()));
+				System.out.println("NOAText: clean(): configured_temp_filename="+configured_temp_filename.toString());
+			}
+
+			//TODO: Most easily, we might simply pass the valid fall or even the configured_temp_filename portion to NOAText from whereever it is called while opening a document.
+			//TODO: CAVE: Changing the calling conventions might break compatibility with other text plugins!
+			//Vom aktuell ausgewählten (NEIN - falsche Quelle!) Fall könnte man noch eine ganze Reihe weiterer Felder dem Dateinamen hinzufügen.
+			//Ich lasse das aber mal weg, um den Dateinamen einigermassen übersichtlich zu halten.
+			//NEIN - falsche Quelle - ERNSTE WARNUNG: Wenn ein schon vorhandenes Dokument zum Öffnen ausgewählt wurde,
+			//dann wären diese Informationen auch alle möglicherweise invalid - weil entweder noch kein Fall ausgewählt war,
+			//oder weil ein anderer Fall ausgewählt war, als derjenige, zu dem das Dokument wirklich gehört.
+			//I.e., man müsste nicht über selectedFall kommen, sondern von der ID des aktuellen Dokuments ausgehend
+			//den zu diesem Dokument gehörige Fall erschliessen, und dann dessen Daten verwenden.
+			//Oder das müsste bereits im ch.elexis...TextView.java oder ch.elexis..BriefAuswahl.java geschehen.
+			//Insofern lasse ich ALLE Informationen zum ausgewählten Fall aus dem temporären Dateinamen WEG.
+			//Fall selectedFall = (Fall) ElexisEventDispatcher.getSelected(Fall.class);		
+			//if (selectedFall != null) {
+			//	configured_temp_filename=configured_temp_filename
+			//		+selectedFall.getBeginnDatum()+"_"
+			// 		+selectedFall.getBezeichnung()+"_";
+			//}
+			
+			//TODO: Most easily, we might simply pass the valid konsultation or even the configured_temp_filename portion to NOAText from whereever it is called while opening a document.
+			//TODO: CAVE: Changing the calling conventions might break compatibility with other text plugins!
+			//Von der aktuell ausgewählten (NEIN - falsche Quelle!) Konsultation könnte man noch eine ganze Reihe weiterer Felder dem Dateinamen hinzufügen.
+			//Ich lasse das meiste aber mal weg, um den Dateinamen einigermassen übersichtlich zu halten.
+			//NEIN - falsche Quelle - ERNSTE WARNUNG: Wenn ein schon vorhandenes Dokument zum Öffnen ausgewählt wurde,
+			//dann wären diese Informationen auch alle möglicherweise invalid - weil entweder noch keine Konsultation ausgewählt war,
+			//oder weil eine andere Konsultation ausgewählt war, als diejenige, zu der das Dokument  wirklich gehört.
+			//I.e., man müsste nicht über selectedKonsultation kommen, sondern von der ID des aktuellen Dokuments ausgehend
+			//die zu diesem Dokument gehörige Konsultation erschliessen, und dann deren Daten verwenden.
+			//Oder das müsste bereits im ch.elexis...TextView.java oder ch.elexis..BriefAuswahl.java geschehen.
+			//Insofern lasse ich ALLE Informationen zur ausgewählten Konsultation aus dem temporären Dateinamen WEG.
+			//Konsultation selectedKonsultation = (Konsultation) ElexisEventDispatcher.getSelected(Konsultation.class);		
+			//if (selectedKonsultation != null) {
+			//	configured_temp_filename=configured_temp_filename
+			//		+"Kons"+selectedKonsultation.getDatum()+"_"
+			//		+"Kons"+selectedKonsultation.getMandant()+"_"
+			//		+"Kons"+selectedKonsultation.getAuthor()+"_";
+			//}
+			
+			//TODO: Add the elexis BriefAuswahl document name to the temporary filename.
+			//TODO: Most easily, we might simply pass the valid BriefAuswahl document name or even the configured_temp_filename portion to NOAText from whereever it is called while opening a document.
+			//TODO: CAVE: Changing the calling conventions might break compatibility with other text plugins!
+			System.out.println("NOAText: clean: TODO: Add the elexis Briefauswahl document name to the temporary filename.");
+			System.out.println("NOAText: clean: TODO: Please note: This must work for creating a new document, opening an existing one, and renaming one.");
+			System.out.println("NOAText: clean: TODO: Also note that documents may be opened from other sources than BriefAuswahl; i.e. Rezepte etc. and cover these ways.");
+			System.out.println("NOAText: clean: TODO: The all underlying problem is that NOAText may simply not know the elexis metadata for the document it handles.");
+			/*
+			//FIXME: WARNING: PLEASE REVIEW: I try to obtain the elexis BriefAuswahl name of the currently opened document.
+			//to do that, I must first create an instance of BriefAuswahl, because even when I explicitly designate its ctab property public,
+			//I cannot simply access it here - static reference to non-static field is not possible.
+			//This relies on the precondition, that actually, only one View BriefAuswahl would ever exist, and any instantiated BriefAuswahl would point to the same content.
+			//And that the selection over there is only read, while this document is being opened - i.e. not when another document has been selected afterwards.
+			//After all, the code does not cause any pre-compile-time errors; and as the locally created instances are probably removed on exit of this procedure,
+			//one most probable unwanted result might simply be that we get a new unrelated, meaningless instance - or none at all -
+			//plus some extra db read accesses, and the returned name would either be empty, or something like the first or last (=auto pre-selected) on the list,
+			//which would become obvious during the first tests.
+			//About as expected - I actually get some nullPointer exception, which would cause the whole opening attempt to fail.
+			//Using try catch to fix this, NO component gets added to the temp filename by this code section.
+			//Having limited time, I comment it out for now and leave the task of adding the elexis Briefauswahl document name to the temporary filename for later.  
+			try {
+				BriefAuswahl myBriefAuswahl = new BriefAuswahl();
+				if (myBriefAuswahl != null) {
+					CTabItem sel = myBriefAuswahl.ctab.getSelection();
+					if (sel != null) {
+						CommonViewer cv = (CommonViewer) sel.getData();
+						Object[] o = cv.getSelection();
+						if ((o != null) && (o.length > 0)) {
+							Brief brief = (Brief) o[0];
+							
+							System.out.println("NOAText: clean: TODO: WARNING: PLEASE REVIEW: the way I tried to obtain brief.getLabel() makes certain assumptions that may not be justified.");
+							System.out.println("NOAText: clean: brief.getLabel()=<"+brief.getLabel()+">");
+							
+							configured_temp_filename=configured_temp_filename
+									+brief.getLabel()+"_";
+						}
+					}
+				}
+			} catch (Throwable throwable) {
+				//do nothing
+			}
+			*/
+
+			
+			//FIXME: Code adopted from ominvore_js 1.4.4 PreferencePage.java. Should possibly go into some helper unit and be used from either location (plus maybe others where I might create filenames but remember that only vaguely.)
+			
+			//Remove all characters that shall not appear in the generated filename
+			//Ich verwende kein replaceAll, weil dessen Implementation diverse erforderliche Escapes offenbar nicht erlaubt.
+			//Especially, \. is not available to specify a plain dot. (Na ja: \0x2e ginge dann doch - oder sollte gehen.
+			//Findet aber nichts. Im interaktiven Suchen/Ersetzen in Eclipse ist \0x2e illegal; \x2e geht eher.
+			//In Java Code geht ggf. \056 (octal) . Siehe unten beim automatischen Entfernen von Dateinamen-Resten besonders aus dem docTitle.))
+
+			//configured_temp_filename should not be null, because we allocated an empty StringBuffer above for it.
+			//And it MUST not be null, because further below, we set it to filename_clean - so it should probably exist by that point in time.
+			//So NO method above should set it to null.
+			if ( !configured_temp_filename.toString().isEmpty() )  {
+				StringBuffer filename_clean=new StringBuffer();
+
+				for (int n=0;n<configured_temp_filename.length();n++) {
+					String c=configured_temp_filename.substring(n,n+1);
+					if ((c.codePointAt(0)>=32) && (!LocalOfficeApplicationPreferencesPage.cotf_unwanted_chars.contains(c))) {
+						filename_clean.append(c);
+					}
+				}	
+
+				configured_temp_filename=filename_clean;
+			
+				System.out.println("NOAText: clean: configured_temp_filename=<"+configured_temp_filename+">");
+				System.out.println("NOAText: clean: about to createTempFile(\"noa_\"+configured_temp_filename, \".odt\")...");
+				myFile = File.createTempFile(configured_temp_filename.toString().trim(), ".odt");
+			}												
+			else {
+			//MessageDialog.openInformation(Desk.getTopShell(),
+			//	Messages.getString("BriefAuswahlNoPatientSelected"),
+			//	Messages.getString("BriefAuswahlNoPatientSelected"));		
+			
+			System.out.println("NOAText: clean: about to createTempFile(\"noa\", \".odt\")...");
 			myFile = File.createTempFile("noa", ".odt");
+			}
+			
 			myFile.deleteOnExit();
 		} catch (Exception ex) {
 			ExHandler.handle(ex);

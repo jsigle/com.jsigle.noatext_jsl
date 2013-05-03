@@ -69,8 +69,13 @@ import ag.ion.bion.officelayer.document.IDocumentService; //20120222js: To suppo
 import ag.ion.bion.officelayer.text.ITextDocument;
 import ag.ion.noa.frame.ILayoutManager; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
 
+import ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage; //20130310js: To support control of js threaded watchdog from NOAText_jsl preferences dialog.
+
 import ch.elexis.Desk;
+import ch.elexis.Hub;
 import ch.elexis.util.SWTHelper;
+import ch.elexis.preferences.PreferenceConstants; 		 //20130310js: To support control of js threaded watchdog from NOAText_jsl preferences dialog.
+import ch.elexis.preferences.SettingsPreferenceStore;	 //20130310js: To support control of js threaded watchdog from NOAText_jsl preferences dialog.
 
 import com.sun.star.frame.XLayoutManager; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
 import com.sun.star.frame.XFrame; //20120222js: To support disabling menus items and open dialogs which would cause the Elexis/OO to hang
@@ -83,6 +88,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.swt.widgets.Shell;
 
 import java.io.InputStream;
@@ -977,8 +983,19 @@ public class LoadDocumentOperation implements IRunnableWithProgress {
 			
 			System.out.println("LoadDocumentOperation: cyclesWaitedForInternalThreadToComplete: "+cyclesWaitedForInternalThreadToComplete);
 
-			int cyclesWatchdogMaximumAllowedHalfSecs = 40;
 			
+			//20130310js: Introduced in NOAText_jsl Version 1.4.8:
+            //The timeout setting for the threaded watchdog is user configurable via the NOAText_jsl configuration dialog.
+			//I don't want to read it from the preferenceStore directly, because we would have to do that in every cycle,
+			//and it includes some string manipulation, needs 3 imports, and accessing a public static variable over there for the default value etc.
+			//Instead, I have created a public static variable over there to provide the desired numeric value directly.
+			int cyclesWatchdogMaximumAllowedHalfSecs=LocalOfficeApplicationPreferencesPage.getTimeoutThreadedWatchdog();
+			System.out.println("LoadDocumentOperation: Threaded watchdog timeout from NOAText_jsl preferences: "+cyclesWatchdogMaximumAllowedHalfSecs);
+			
+			if (cyclesWatchdogMaximumAllowedHalfSecs==0) {
+				System.out.println("LoadDocumentOperation: Please note: Threaded watchdog = 0 means it has been disabled.");				
+			}
+			else
 			if (cyclesWaitedForInternalThreadToComplete>cyclesWatchdogMaximumAllowedHalfSecs) {
 				cyclesWaitedForInternalThreadToComplete=-1; //Paranoia: Damit der nächste Thread.destroy() ggf. nicht schon in 0.5 Sek zuschlagen kann...
 				
@@ -1096,7 +1113,7 @@ public class LoadDocumentOperation implements IRunnableWithProgress {
 			
 		}
 
-		System.out.println("LoadDocumentOperation: run 3 TO DO: Thread.sleep(3000) [WARNING: REMOVED SLEEP()], otherwise OO 3.x might crash (says comment in code)");
+		System.out.println("LoadDocumentOperation: run 3 TO DO / WARNING: REMOVED Thread.sleep(3000) here - but comment in code says that this might cause OOo 3.x to crash");
 		// sleep here for a while otherwise OOo 3.x might crash
 		//Thread.sleep(3000);
 		System.out.println("LoadDocumentOperation: run 4 sleep ends");

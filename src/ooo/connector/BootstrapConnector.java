@@ -1,5 +1,11 @@
 package ooo.connector;
 
+import org.eclipse.jface.preference.IPreferenceStore;
+
+import ag.ion.noa4e.internal.ui.preferences.LocalOfficeApplicationPreferencesPage;
+import ch.elexis.Hub;
+import ch.elexis.preferences.SettingsPreferenceStore;
+
 import com.sun.star.bridge.UnoUrlResolver;
 import com.sun.star.bridge.XUnoUrlResolver;
 import com.sun.star.comp.helper.Bootstrap;
@@ -124,30 +130,55 @@ public class BootstrapConnector {
 
             if (xUrlResolver==null)			System.out.println("BootstrapConnector: connect(1): xUrlResolver==null");
             else							System.out.println("BootstrapConnector: connect(1): xUrlResolver="+ xUrlResolver.toString());
-
+            
+			//20130310js: Introduced in NOAText_jsl Version 1.4.8:
+            //The maximum loop count for the connection attempt is user configurable via the NOAText_jsl configuration dialog.
+            //Although this setting would not have to be read as often as timoutThreadedWatchdog in LoadDocumentOperation,
+			//I'm using the same mechanism as over there and read it from a public integer variable. 
+            //Only 1 imports has been added to this file for this purpose.		
+			Integer timeoutBootstrapConnect=LocalOfficeApplicationPreferencesPage.getTimeoutBootstrapConnect();
+			
+			if (timeoutBootstrapConnect<30) {
+				System.out.println("BootstrapConnector: WARNING: You're allowing "+timeoutBootstrapConnect / 2+"+ seconds for Office to load and become available for a connection. Is this realistic?");				
+			}
+            
+            
             // wait until office is started
-            System.out.println("BootstrapConnector: connect(1): Loop: Wait until office is started... (max. 30 sec, instead of 300 sec)");
+            System.out.println("BootstrapConnector: connect(1): Loop: Try to getRemoteContext()...");
             for (int i = 0;; ++i) {
                 try {
                     System.out.println("BootstrapConnector: connect(1): about to getRemoteContext(xUrlResolver)...");
                     xContext = getRemoteContext(xUrlResolver);
-                    System.out.println("BootstrapConnector: connect(1): getRemoteContext(xUrlResolver) returned");
+                    System.out.println("BootstrapConnector: connect(1): getRemoteContext(xUrlResolver) has returned. break...");
                     break;
                 } catch ( com.sun.star.connection.NoConnectException ex ) {
                     System.out.println("BootstrapConnector: connect(1): WARNING: caught NoConnectException: "+i+"...");
                     // Wait 500 ms, then try to connect again, but do not wait
                     // longer than 5 min (= 600 * 500 ms) total:
                     // 201302190302js: changed this from 600 down to 60, i.e. 30 sec max. if (i == 600) {
-                    if (i == 60) {
+                    // 201303100428js: hopefully got this configurable now from the NOAText_jsl preferences dialog. >= instead of == is important now!
+                    if (i >= timeoutBootstrapConnect) {
+                    	System.out.println("BootstrapConnector: connect(1): WARNING: timeoutBootstrapConnect reached, so throwing new BootstrapException() to inform parent.");
                         throw new BootstrapException(ex.toString());
-                    }
+                    } 
+                    System.out.println("BootstrapConnector: connect(1): WARNING: calling Thread.sleep(500) before trying again...");
                     Thread.sleep(500);
                 }
+                System.out.println("BootstrapConnector: connect(1): TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println("BootstrapConnector: connect(1): TODO: Maybe we should handle other types of exceptions by breaking the loop immediately.");
+                System.out.println("BootstrapConnector: connect(1): TODO: After all, e.g. invalid variables passed won't improve simply by retrying.     js ");
+                System.out.println("BootstrapConnector: connect(1): TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                
+                //js: getRemoteContext() could also throw other types of exception.
+                //js: But NoConnectException() is probably the only one that should be handled by waiting and trying again -
+                //js: because it might occur when the office software package would require just a bit more time to start up.
             }
-            System.out.println("BootstrapConnector: connect(1): Waiting for office to start is over.");
+            System.out.println("BootstrapConnector: connect(1): Loop trying to getRemoteContext() is over.");
         } catch (java.lang.RuntimeException e) {
+            System.out.println("BootstrapConnector: connect(1): WARNING: caught RuntimeException e; throwing e to inform parent.");
             throw e;
         } catch (java.lang.Exception e) {
+            System.out.println("BootstrapConnector: connect(1): WARNING: caught Exception; throwing new BootstrapException(e) to inform parent.");
             throw new BootstrapException(e);
         }
 

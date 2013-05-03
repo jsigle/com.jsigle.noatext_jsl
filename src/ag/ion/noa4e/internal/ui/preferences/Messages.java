@@ -8,7 +8,7 @@
  *                                                                          * 
  * GNU Lesser General Public License Version 2.1                            *
  * ======================================================================== *
- * Copyright 2003-2006 by IOn AG                                            *
+ * Copyright 2003-2006 by IOn AG; Portions Copyright (c) 2013 Joerg Sigle   *
  *                                                                          *
  * This library is free software; you can redistribute it and/or            *
  * modify it under the terms of the GNU Lesser General Public               *
@@ -68,4 +68,16 @@ public class Messages extends NLS {
   public static String LocalOfficeApplicationPreferencesPage_dialog_restart_workbench_message;
   public static String LocalOfficeApplicationPreferencesPage_prevent_termination_lable;
  
+  public static String LocalOfficeApplicationPreferencesPage_label_timeout_bootstrap_connect;   //20130310js timeout made configurable for the loop found in bootstrap*.jar that would originally stop a connection attempt after 500 tries
+  public static String LocalOfficeApplicationPreferencesPage_label_timeout_threaded_watchdog;	//20130310js timeout made configurable for the threaded watchdog timer added in 1.4.x by js
+
+  public static String LocalOfficeApplicationPrefrencesPage_construction_of_temporary_filename;   //20130420js: noatext_jsl 1.4.9 -> 1.4.10: Adopt configurability of meaningful temporary filename from omnivore_js 1.4.4:
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_constant1;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_pid;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_fn;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_gn;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_dob;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_fill_lead_char;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_num_digits;
+  public static String LocalOfficeApplicationPrefrencesPage_cotf_add_trail_char;
 }

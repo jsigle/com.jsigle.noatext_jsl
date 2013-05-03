@@ -311,9 +311,11 @@ public class EditorCorePlugin extends Plugin {
     System.out.println("EditorCorePlugin: Workaround: Apparently, this does not work any more. Now, tried it without that...");
     System.out.println("EditorCorePlugin: Workaround: ...which produces nothing different at all. No luck getting content into a frame.");
     System.out.println("EditorCorePlugin: Workaround: TO DO: WE CAN POSSIBLY DISABLE THIS PERMANENTLY. Temp reenabled it again for now.");
+    System.out.println("EditorCorePlugin: Workaround: TO DO: NO, ONCE AGAIN DISABLED HERE AND IN NOAText.java as well. What happens?");
+    System.out.println("EditorCorePlugin: Workaround: TO DO: Under Linux: No change, today, if both are disabled.");
     System.out.println("EditorCorePlugin: *********************************************************************************************");
     
-    /*201302210124js tried disabling this:*/ 
+    /*201302210124js tried disabling this:
     try {
     	System.out.println("EditorCorePlugin: Workaround: about to try: new Frame();");
         new Frame();
