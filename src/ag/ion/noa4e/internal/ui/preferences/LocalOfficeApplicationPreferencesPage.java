@@ -865,7 +865,47 @@ public class LocalOfficeApplicationPreferencesPage extends PreferencePage implem
 	return getCotfOption;
   }
   
+	//----------------------------------------------------------------------------
+	
+	// TO DO: Refactoring: Similar code is used around the omnivore and noatext preferences. Maybe put it all into some jsigle.utils code file. Be careful not to break plugin independence by that.
+
+	 /**
+	   * 201305271847js:
+	   * Clear unwanted_chars from s_incoming and return a String with all remaining chars whose codePoint is >= 32.
+	   * Even if s_incoming is null or empty, an allocated but empty String is returned.
+	   * Warning: This method relies on Java properly handling memory allocation by itself.
+	   *  
+	   * minus all characters that occur in 
+	   * @param s_incoming		- The string that shall be cleaned from unwanted characters.
+	   * @param unwanted_chars	- A string of characters >= 32 that must not appear in the returned StringBuffer. 
+	   * @return				- A StringBuffer containing s_incoming cleaned from all chars whose codePoint is <32 or who are contained in unwanted_chars.
+	   */
+		
+	//Ich verwende kein replaceAll, weil dessen Implementation diverse erforderliche Escapes offenbar nicht erlaubt.
+	//Especially, \. is not available to specify a plain dot. (Na ja: \0x2e ginge dann doch - oder sollte gehen.
+	//Findet aber nichts. Im interaktiven Suchen/Ersetzen in Eclipse ist \0x2e illegal; \x2e geht eher.
+	//In Java Code geht ggf. \056 (octal) . Siehe unten beim automatischen Entfernen von Dateinamen-Resten besonders aus dem docTitle.))
+
+	//A final trim() is NOT included, as the function may also be used on content that might consist of a single space -
+	//namely, the configurable separation charactes between various elements of an auto-generated filename in Omnivore or TextView. 
+	
+	public static String cleanStringFromUnwantedCharsAndTrim(String s_incoming, String unwanted_chars) {
+		StringBuffer s_clean=new StringBuffer();
+		if (s_incoming != null) { 
+			for (int n=0;n<s_incoming.length();n++) {
+				String c=s_incoming.substring(n,n+1);
+				if ((c.codePointAt(0)>=32) && (!unwanted_chars.contains(c))) {
+					s_clean.append(c);
+				}			
+			}
+		}
+		return s_clean.toString();
+	}												
+
 //----------------------------------------------------------------------------
+
+// TO DO: Refactoring: Similar code is used around the omnivore and noatext preferences. Maybe put it all into some jsigle.utils code file. Be careful not to break plugin independence by that.
+	
   /**
    * Accepts some data to turn into a temporary filename element, and returns a formatted temporary filename element, observing current settings from the preference store, also observing default settings and min/max settings for that parameter
    * 
@@ -899,7 +939,15 @@ public class LocalOfficeApplicationPreferencesPage extends PreferencePage implem
 			   System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: Match!");
 			   
 			   if (element_key.contains("constant")) {
-				   String constant=preferenceStore.getString(PREFERENCE_BRANCH+PREFERENCE_COTF+PREFERENCE_cotf_elements[i]+"_"+PREFERENCE_cotf_parameters[1]).trim();
+				   //Since omnivore_js 1.4.5 / noatext_jsl 1.4.12:
+				   //Mask all characters that shall not appear in the generated filename from add_trail_char.
+				   //The masking is implemented here, and not merely after the input dialog, so that unwanted characters are caught
+				   //even if they were introduced through manipulated configuration files or outdated settings.
+				   //Do NOT trim leadig and trailing space however - some user might want a single space as separation character.
+					
+				   String constant=cleanStringFromUnwantedCharsAndTrim(
+							preferenceStore.getString(PREFERENCE_BRANCH+PREFERENCE_COTF+PREFERENCE_cotf_elements[i]+"_"+PREFERENCE_cotf_parameters[1]),
+							cotf_unwanted_chars);
 
 				   System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: returning constant=<"+constant+">");
 
@@ -938,21 +986,8 @@ public class LocalOfficeApplicationPreferencesPage extends PreferencePage implem
 					String element_data_incoming=element_data.trim();
 					System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: element_data_incoming=<"+element_data_incoming+">");
 					
-					//Remove all characters that shall not appear in the generated filename
-					//Ich verwende kein replaceAll, weil dessen Implementation diverse erforderliche Escapes offenbar nicht erlaubt.
-					//Especially, \. is not available to specify a plain dot. (Na ja: \0x2e ginge dann doch - oder sollte gehen.
-					//Findet aber nichts. Im interaktiven Suchen/Ersetzen in Eclipse ist \0x2e illegal; \x2e geht eher.
-					//In Java Code geht ggf. \056 (octal) . Siehe unten beim automatischen Entfernen von Dateinamen-Resten besonders aus dem docTitle.))
-					StringBuffer element_data_clean=new StringBuffer();
-					if (element_data_incoming != null)  {
-						for (int n=0;n<element_data_incoming.length();n++) {
-							String c=element_data_incoming.substring(n,n+1);
-							if ((c.codePointAt(0)>=32) && (!cotf_unwanted_chars.contains(c))) {
-								element_data_clean.append(c);
-							}
-						}	
-					}												
-					String element_data_processed5=(element_data_clean.toString().trim());
+					//Remove all characters that shall not appear in the generated filename and trim leading and trailing whitespace
+					String element_data_processed5=cleanStringFromUnwantedCharsAndTrim(element_data_incoming, cotf_unwanted_chars).trim();
 					
 					System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: element_data_processed5=<"+element_data_processed5+">");
 					
@@ -973,8 +1008,17 @@ public class LocalOfficeApplicationPreferencesPage extends PreferencePage implem
 					
 					//If a leading fill character is given, and the length of the result is below the specified max_number of digits, then fill it up.
 					//Note: We could also check whether the num_digits has been given. Instead, I use the default max num of digits if not.
-					String lead_fill_char=preferenceStore.getString(PREFERENCE_BRANCH+PREFERENCE_COTF+PREFERENCE_cotf_elements[i]+"_"+PREFERENCE_cotf_parameters[0]).trim();
+
+				    //Since omnivore_js 1.4.5 / noatext_jsl 1.4.12:
+					//Mask all characters that shall not appear in the generated filename from add_trail_char.
+					//The masking is implemented here, and not merely after the input dialog, so that unwanted characters are caught
+					//even if they were introduced through manipulated configuration files or outdated settings.
+					//Do NOT trim leadig and trailing space however - some user might want a single space as separation character.
 					
+					String lead_fill_char=cleanStringFromUnwantedCharsAndTrim(
+							preferenceStore.getString(PREFERENCE_BRANCH+PREFERENCE_COTF+PREFERENCE_cotf_elements[i]+"_"+PREFERENCE_cotf_parameters[0]),
+							cotf_unwanted_chars);
+
 					System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: lead_fill_char=<"+lead_fill_char+">");
 					
 					if ((lead_fill_char != null) && (lead_fill_char.length()>0) && (element_data_processed1.length()<num_digits)) {
@@ -995,8 +1039,18 @@ public class LocalOfficeApplicationPreferencesPage extends PreferencePage implem
 					System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: element_data_processed=<"+element_data_processed+">");
 					
 					
-					//If an add trailing character is given, add one (typically, this would be a space or an underscore)
-					String add_trail_char=preferenceStore.getString(PREFERENCE_BRANCH+PREFERENCE_COTF+PREFERENCE_cotf_elements[i]+"_"+PREFERENCE_cotf_parameters[2]).trim();
+					//If an add trailing character is given, add one (typically, this would be a space or an underscore).
+					//Even if a string is entered in the configuration dialog, only the first valid character is used.
+					
+				    //Since omnivore_js 1.4.5 / noatext_jsl 1.4.12:
+					//Mask all characters that shall not appear in the generated filename from add_trail_char.
+					//The masking is implemented here, and not merely after the input dialog, so that unwanted characters are caught
+					//even if they were introduced through manipulated configuration files or outdated settings.
+					//Do NOT trim leadig and trailing space however - some user might want a single space as separation character.
+					
+					String add_trail_char=cleanStringFromUnwantedCharsAndTrim(
+							preferenceStore.getString(PREFERENCE_BRANCH+PREFERENCE_COTF+PREFERENCE_cotf_elements[i]+"_"+PREFERENCE_cotf_parameters[2]),
+							cotf_unwanted_chars);
 
 					System.out.println("LocalOfficeApplicationPreferencePage: getNOAText_jslTemp_Filename_Element: add_trail_char=<"+add_trail_char+">");
 					
