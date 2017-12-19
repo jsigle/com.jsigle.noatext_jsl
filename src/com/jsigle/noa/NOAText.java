@@ -821,16 +821,88 @@ public class NOAText implements ITextPlugin {
 			if (cb != null) {
 				for (ITextRange r : textRanges) {
 					String orig = r.getXTextRange().getString();
+System.out.println("js NOAText.java findOrReplace() orig="+orig);
 					Object replace = cb.replace(orig);
 					if (replace == null) {
 						r.setText("??Auswahl??");
 					} else if (replace instanceof String) {
+System.out.println("js NOAText.java findOrReplace() (String) replace="+((String) replace));
+						/*
+						 * 201306010323js:
+						 * Here is the original set of replacements active in noatext, noatext_jsl before today.
+						 * This causes e.g. multiline entries from the "Patient Detail" - "Diagnosen" field,
+						 * with ENTER as a line separator, to arrive as a single Absatz / Paragraph in Office,
+						 * with SHIFT-ENTER as a liner separator.
+						 * If that is copied and pasted back into the Diagnosen Field in Elexis,
+						 * the SHIFT-ENTERs will not work as Newlines (nor NewParagraphs, unknown anyway) in Elexis.
+						 * To correct that problem, I want newlines to be transferred as newlines, and nothing else.
+						 * Please note: The first line of the following three was already commented out when I saw it today.
+						 * 
+						 * Please note that the last line would replace multiple consequtive new paragraphs by a single one.
+						 *  
 						// String repl=((String)replace).replaceAll("\\r\\n[\\r\\n]*", "\n")
 						String repl = ((String) replace).replaceAll("\\r", "\n");
 						repl = repl.replaceAll("\\n\\n+", "\n");
+						 */
+						
+						/*
+						// 201306010323js: Now here's my custom set of search-replacements
+						// to be applied on the fly - namely: don't change anything, leave it alone.
+
+						// So this doesn't suffice, because the incoming text has CRLF, which results
+						// in one NeuerAbsatz (NewParagraph) = ENTER, followed by one NeueZeile (NewLine) = SHIFT-ENTER,
+						// per line.
+
+						// String repl=((String)replace).replaceAll("\\r\\n[\\r\\n]*", "\n")
+						//String repl = ((String) replace).replaceAll("\\r", "\n");
+						//repl = repl.replaceAll("\\n\\n+", "\n");
+
+						String repl=(String) replace;
+						*/
+
+						// Now something better: Replace each CRLF by one CR.
+
+						/*
+						//That returns the wrong variant: multiple SHIFT-ENTERs within the paragraph
+						String repl = ((String) replace).replaceAll("\\r\\n", "\n");
+						*/
+
+						//That returns the right variant: multiple ENTERs within the paragraph
+						//Und das ist brauchbar, weil NUR damit ein aus dem Brief herauskopierter,
+						//automatisch beim Erstellen des Briefes erzeugter Zeilenumbruch (in Form eines missbrauchten Absatzumbruches),
+						//nach einem copy/paste auch wieder einen Zeilenumbruch im Diagnosenfenster ergibt,
+						//und alssolcher auch im nächsten davon abgeleiteten Brief wieder einen Zeilenumbruch bewirkt.
+						//D.h., man streicht das zweite Zeichen weg, lässt das erste (!), nicht (!) jedoch das zweite stehen,
+						//und schon kann man zufriedener arbeiten.
+						//N.B.: Auch im "interner Text" Textplugin würde so ein Filter guttun. Da ist momentan keiner drin, das führt auch zu doppelten Leerzeilen.
+						String repl = ((String) replace).replaceAll("\\r\\n", "\r");
+						
+						//Und jetzt noch einzelne \\n durch \\r ersetzen - das sollte innerhalb der Adresse,
+						//oder im Konsultationstext helfen, automatisch erstellt nach den Hyperlinks für Briefe.
+						//Die würden sonst auch als Zeilenumbruch erscheinen, und nicht mehr wirkungsvoll zurückkopierbar sein.
+						repl = repl.replaceAll("\\n", "\r");
+
+						//Jetzt ersetze ich noch mehrfache aufeinanderfolgende \\r durch ein \r,
+						//weil das ursprünglich drin war, und der Generator für die Hinzu-Adressen das erwartet.
+						//Ohne das stehen immer 3 Absatzumbrüche nach jedem Block (=2 Leerzeilen),
+						//dann noch ein Leerzeichen mit einem Absatzumbruch (=noch eine schon früher erzwungene Leerzeile).
+						//Um also damit kompatibel zu bleiben (und mit den anderen Elexissen...),
+						//mache ich das ad hoc auch.
+						repl = repl.replaceAll("\\r+", "\r");
+						
+						// TODO: Die obigen Ersetzungen ein- und ausschaltbar machen.
+						// N.B.: Innerhalb der Adresse stehen immer noch Zeilenumbrüche nach den einzelnen Zeilen.
+						// Das liegt NICHT an den o.g. Umbruchsersetzungen, sondern daran, dass ich die Druckvorlage
+						// eigentlich "korrekt" definiert habe - also ein Feld pro Zeile, und danach habe ich dann
+						// selbst jeweils den Zeilenumbruch in der Druckvorlage verwendet. Insofern sind die o.a.
+						// Ersetzungsroutinen jetzt so \r über \n präferierend, und gleichzeitig so kompatibel
+						// mit bisherigen Druckvorlagen/Textplugins, wie möglich. 201306010358js
+
+						
 						r.setText(repl);
 					} else if (replace instanceof String[][]) {
 						String[][] contents = (String[][]) replace;
+System.out.println("js NOAText.java findOrReplace() (String[][]) contents (of replace)="+contents);
 						try {
 							ITextTable textTable =
 								doc.getTextTableService().constructTextTable(contents.length,

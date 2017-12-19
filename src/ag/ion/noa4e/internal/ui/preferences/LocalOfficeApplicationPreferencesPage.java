@@ -892,11 +892,15 @@ public class LocalOfficeApplicationPreferencesPage extends PreferencePage implem
 	public static String cleanStringFromUnwantedCharsAndTrim(String s_incoming, String unwanted_chars) {
 		StringBuffer s_clean=new StringBuffer();
 		if (s_incoming != null) { 
-			for (int n=0;n<s_incoming.length();n++) {
-				String c=s_incoming.substring(n,n+1);
-				if ((c.codePointAt(0)>=32) && (!unwanted_chars.contains(c))) {
-					s_clean.append(c);
-				}			
+			if ((unwanted_chars == null) || (unwanted_chars.length()==0)) {
+				s_clean.append(s_incoming);
+			} else {
+				for (int n=0;n<s_incoming.length();n++) {
+					String c=s_incoming.substring(n,n+1);
+					if ((c.codePointAt(0)>=32) && (!unwanted_chars.contains(c))) {
+						s_clean.append(c);
+					}
+				}
 			}
 		}
 		return s_clean.toString();
